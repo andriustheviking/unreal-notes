@@ -1,7 +1,5 @@
 # Unreal Editor
 
----
-
 ## Todo:
 
 * Lookup Rotator vs Rotation
@@ -31,8 +29,6 @@
   ```
 
 ## Viewport
-
-Shortcuts:
 
 * **Shift + F1**  - regains mouse while running game
 
