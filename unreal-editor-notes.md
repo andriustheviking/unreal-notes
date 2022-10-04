@@ -1,12 +1,24 @@
 # Unreal Editor
 
-## Todo:
+# Table of Contents
+
+- [Miscellaneous](#Miscellaneous)
+- [Viewport](#Viewport)
+  - [Viewport Settings](###viewport-settings)
+  - [Brush Editing](###brush-editing)
+- [Settings](#settings)
+  - [General Settings](###general-settings)
+  - [Project Settings](###project-settings)
+
+---
+
+# Todo:
 
 - Lookup Rotator vs Rotation
 
 - What is a Controller exactly? How does it work? 
 
-## Miscellaneous:
+# Miscellaneous:
 
 - In-game input: Clamping axis input can prevent spikes in value that could break collision
 
@@ -14,21 +26,7 @@
 
 - FBX (FilmBox Format) is recommended mesh format in UE
 
-## UE Editor Filesystem
-
-- `/Config/DefaultEngine.ini`
-  
-  - Contains Mappings between editor and source code files
-  
-  - Use to find mappings between C++ and Editor
-  
-  - **Example**: The `Grabber` trace channel from the editor can be referenced in C++ as `ECC_GameTraceChannel2`
-  
-  ```cpp
-  +DefaultChannelResponses=(Channel=ECC_GameTraceChannel2,DefaultResponse=ECR_Ignore,bTraceType=True,bStaticObject=False,Name="Grabber")
-  ```
-
-## Viewport
+# Viewport
 
 - **Shift + F1**  - regains mouse while running game
 
@@ -46,11 +44,11 @@
 
 - **Shift + B** - (Brush Editing) Selects all sides of a selected shape
 
-<br>Viewport Settings:
+### Viewport Settings:
 
 - **Engine Scalability Settings** changes the viewport rendering settings
 
-<br>Brush Editing:
+### Brush Editing:
 
 - Tool to quickly create geometry. 
 
@@ -66,7 +64,9 @@
 
 - "Create Static Mesh" will turn a selection of brush geo objects into a static mesh object. **Note: The last object selected will be used as the Center Reference***
 
-## Project Settings
+# Settings
+
+### General Settings
 
 - Settings are written to `.ini` files
 
@@ -75,16 +75,47 @@
 
 - Configuration inheritance:
   
-  - `Engine/Config/Base.ini` (Usually empty)
+  - **Engine/Config/Base.ini**
+    
+    - Usually empty
   
-  - `Engine/Config/BaseEngine.ini` 
+  - **Engine/Config/BaseEngine.ini**
   
-  - `Engine/Config/[Platform]/base[Platform]Engine.ini` 
+  - **Engine/Config/\[Platform]/base\[Platform]Engine.ini**
   
-  - `[ProjectDirectory]/Config/DefaultEngine.ini` 
+  - **\[ProjectDirectory]/Config/DefaultEngine.ini**
+    
+    - Contains Mappings between editor and source code files
+    
+    - Use to find mappings between C++ and Editor
+    
+    - **Example**: The `Grabber` trace channel from the editor can be referenced in C++ as `ECC_GameTraceChannel2`
+    
+    ```cpp
+    +DefaultChannelResponses=(Channel=ECC_GameTraceChannel2,DefaultResponse=ECR_Ignore,bTraceType=True,bStaticObject=False,Name="Grabber")
+    ```
   
-  - `Engine/Config/[Platform]/[Platform]Engine.ini` 
+  - **Engine/Config/\[Platform]/\[Platform]Engine.ini**
   
-  - `[ProjectDirectory]/Config/[Platform]/[Platform]Engine.ini`
+  - **\[ProjectDirectory]/Config/\[Platform]/\[Platform]Engine.ini**
+
+- Finally, all project-specific and platform-specific differences are saved out to: `[Project Directory]/Saved/Config/[Platform]/[Category].ini`.
+
+### Project Settings:
+
+- Build:
   
-  - Finally, all project-specific and platform-specific differences are saved out to: `[Project Directory]/Saved/Config/[Platform]/[Category].ini`.
+  - When using "Package Project" from the "File" menu in the Unreal editor, the editor will cook, stage and package **ALL CONTENT** in your game (whether it is used by the game or not). This can wind up making your packaged game much bigger than necessary. You can reduce what is cooked by using the `-map=` argument when running BuildCookRun.
+  - `bCookAll` (DefaultGame.ini): if true, cook everything in the content directory. This means that if 
+    you have an asset that is not referenced by any others, it will still 
+    end up in the cook.
+  - `bCookMapsOnly` (DefaultGame.ini): **This setting only has any effect if bCookAll is set.** If it is true, "cook all" does not actually cook every asset, just all maps and the assets they reference.
+
+- Maps and Modes:
+  
+  - Set the default maps here
+
+- Input
+  
+  - Manages key bindings.
+  - **Action** and **Axis** input events
