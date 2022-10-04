@@ -2,13 +2,13 @@
 
 # Table of Contents
 
-- [Miscellaneous](#Miscellaneous)
-- [Viewport](#Viewport)
-  - [Viewport Settings](###viewport-settings)
-  - [Brush Editing](###brush-editing)
+- [Miscellaneous](#miscellaneous)
+- [Viewport](#viewport)
+  - [Viewport Settings](#viewport-settings)
+  - [Brush Editing](#brush-editing)
 - [Settings](#settings)
-  - [General Settings](###general-settings)
-  - [Project Settings](###project-settings)
+  - [General Settings](#general-settings)
+  - [Project Settings](#project-settings)
 
 ---
 
