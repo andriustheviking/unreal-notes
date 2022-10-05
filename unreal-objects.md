@@ -11,6 +11,8 @@
   - [Sky light](#sky-light)
   - [Ambient Light](#ambient-light)
 
+---
+
 # GameMode
 
 > “GameMode is a blueprint class that controls how a player enters the game. For example, in a multiplayer game, you would use Game Mode to determine where each player spawns. More importantly, the Game Mode determines which Pawn the player will use.”

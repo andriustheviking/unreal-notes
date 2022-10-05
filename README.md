@@ -8,4 +8,8 @@ Welcome to my live notes taken for learning Unreal Engine.
 
 ## [Unreal Objects](./unreal-objects.md)
 
+# Todo:
 
+- Lookup Rotator vs Rotation
+
+- What is a Controller exactly? How does it work? 

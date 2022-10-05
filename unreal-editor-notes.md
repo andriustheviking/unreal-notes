@@ -1,6 +1,6 @@
 # Unreal Editor
 
-# Table of Contents
+## Table of Contents
 
 - [Miscellaneous](#miscellaneous)
 - [Viewport](#viewport)
@@ -14,12 +14,6 @@
   - [Widget Components](#widget-components)
 
 ---
-
-# Todo:
-
-- Lookup Rotator vs Rotation
-
-- What is a Controller exactly? How does it work? 
 
 # Miscellaneous:
 
