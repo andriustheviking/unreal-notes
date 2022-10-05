@@ -9,6 +9,9 @@
 - [Settings](#settings)
   - [General Settings](#general-settings)
   - [Project Settings](#project-settings)
+- [Unreal Motion Graphics](#unreal-motion-graphics)
+  - [Widgets](#widgets)
+  - [Widget Components](#widget-components)
 
 ---
 
@@ -75,15 +78,15 @@
 
 - Configuration inheritance:
   
-  - **Engine/Config/Base.ini**
+  - `Engine/Config/Base.ini`
     
     - Usually empty
   
-  - **Engine/Config/BaseEngine.ini**
+  - `Engine/Config/BaseEngine.ini`
   
-  - **Engine/Config/\[Platform]/base\[Platform]Engine.ini**
+  - `Engine/Config/[Platform]/base[Platform]Engine.ini`
   
-  - **\[ProjectDirectory]/Config/DefaultEngine.ini**
+  - `[ProjectDirectory]/Config/DefaultEngine.ini`
     
     - Contains Mappings between editor and source code files
     
@@ -95,9 +98,9 @@
     +DefaultChannelResponses=(Channel=ECC_GameTraceChannel2,DefaultResponse=ECR_Ignore,bTraceType=True,bStaticObject=False,Name="Grabber")
     ```
   
-  - **Engine/Config/\[Platform]/\[Platform]Engine.ini**
+  - `Engine/Config/[Platform]/[Platform]Engine.ini`
   
-  - **\[ProjectDirectory]/Config/\[Platform]/\[Platform]Engine.ini**
+  - `[ProjectDirectory]/Config/[Platform]/[Platform]Engine.ini`
 
 - Finally, all project-specific and platform-specific differences are saved out to: `[Project Directory]/Saved/Config/[Platform]/[Category].ini`.
 
@@ -119,3 +122,37 @@
   
   - Manages key bindings.
   - **Action** and **Axis** input events
+
+# Unreal Motion Graphics
+
+### Widgets
+
+- **Tip:** `RemoveFromParent` on `self` from the Widget's Event Graph will remove the widget instance from the scene entirely.
+
+- Widget Editer has two parts:
+  
+  - **Designer** - visual canvas to design widget
+  
+  - **Event Graph** - Blueprint event graph
+
+### Widget Components
+
+- Widgets are made of Widget Components, like text, boxes, images, etc
+
+- **Is Variable** option in the Designer window exposes a widget component in the event graph
+
+- **Canvas Panel**
+  
+  - The base canvas for a multi-part widget
+  
+  - Add it by dragging to the widget hierarchy
+
+- **Anchor Points** 
+  
+  - Used to maintain component position.
+  
+  - **Tip:** Set the anchor point for widget components to their nearest corner or screen center
+
+- **Bind** 
+  
+  - Links component properties to widget variables

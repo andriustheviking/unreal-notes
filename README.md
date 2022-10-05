@@ -6,4 +6,6 @@ Welcome to my live notes taken for learning Unreal Engine.
 
 ## [Unreal Editor Notes](./unreal-editor-notes.md)
 
-## [Unreal Functions and Classes](./unreal-cpp.md)
+## [Unreal Objects](./unreal-objects.md)
+
+
