@@ -4,7 +4,7 @@
 
 - [GameMode](#gamemode)
   - [GameModeBase](#gamemodebase)
-  - [GameMode](#gamemode-:-gamemodebase)
+  - [GameMode](#gamemode--gamemodebase)
 - [Level](#level)
   - [Level Elements](#level-elements)
 - [Light](#light)
