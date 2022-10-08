@@ -7,10 +7,10 @@
   - [GameModeBase](#gamemodebase)
   - [GameMode](#gamemode--gamemodebase)
 - [Level](#level)
-  - [Level Elements](#level-elements)
 - [Light](#light)
   - [Sky light](#sky-light)
   - [Ambient Light](#ambient-light)
+- [Volume](#volume)
 
 ---
 
@@ -74,12 +74,6 @@ GetPlayerController()->ClientStartCameraShake(MyCameraShakeProperty);
 
 > Levels contain other Actors and provide the environment for your game's players.
 
-### Level Elements
-
-- **TriggerBox** - invisible box to trigger events.
-  
-  - **Tip:** Make visible while editing
-
 # Light
 
 - Three types of rendering: **Static, Stationary,** and **Movable**
@@ -99,6 +93,8 @@ GetPlayerController()->ClientStartCameraShake(MyCameraShakeProperty);
   - Post processing effect of the eye adjusting to ambient light (ie Bethesda "Step out moment").
   
   - Available in **Project Settings**
+  
+  - Alternatively can add a [PostProcessingVolume](#postprocessingvolume), then go to **Exposure > Metering** and switch from **AutoExposureHistogram** to **AutoExposureBasic**.
 
 ### Sky Light
 
@@ -111,3 +107,14 @@ GetPlayerController()->ClientStartCameraShake(MyCameraShakeProperty);
 - Can connect Sky Light and Directional Light so that the Sky light properties accurately reflect the angle of the directional light.
   
   - The skybox will move the sun to where the Direction source is
+
+# Volume
+
+## TriggerVolumeActor
+
+- Volume to trigger game events
+- **Tip:** Make visible while editing
+
+## PostProcessingVolume
+
+- Can apply post processing details to specific volumes in level
