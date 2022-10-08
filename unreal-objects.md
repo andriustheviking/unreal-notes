@@ -10,7 +10,9 @@
 - [Light](#light)
   - [Sky light](#sky-light)
   - [Ambient Light](#ambient-light)
+- [Trace](#trace)
 - [Volume](#volume)
+- [World](#uworld)
 
 ---
 
@@ -108,13 +110,40 @@ GetPlayerController()->ClientStartCameraShake(MyCameraShakeProperty);
   
   - The skybox will move the sun to where the Direction source is
 
+# Trace
+
+- Can be either a **line trace** or **Sweep** (aka shape trace)
+
+- **Note:** By default CharacterClasses ignores trace hits. To fix, change **Collision** of components you want to collide with from **Pawn** to **Custom**. Then change **Visibilty Trace** from **Ignore** to **Block** (or Overlap)
+
+- **LineTraceByChannel**
+
+- Return Bool is the same as OutHit.BlockingHit
+
+## Trace Channel
+
+- Groups traceability of objects and collision/overlap behaviors
+
+- Can add channels in **Project Settings > Trace Channel**
+
+- Useful channel: `ECollisionChannel::ECC_Visibility`
+
+- **[ProjectDirectory]/Config/DefaultEngine.ini** contains the editer/c++ channel name mappings
+
 # Volume
 
 ## TriggerVolumeActor
 
 - Volume to trigger game events
+
 - **Tip:** Make visible while editing
 
 ## PostProcessingVolume
 
 - Can apply post processing details to specific volumes in level
+
+# UWorld
+
+- **WorldContextObject** - all instanced objects in a world can be a WorldContextObject, so can pass `this` from any instance to provide the World Context
+
+- **TimeSeconds** - in-game time, changes with pauses, game speed, etc...
