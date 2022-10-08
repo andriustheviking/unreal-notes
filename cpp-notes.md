@@ -2,16 +2,29 @@
 
 ## Table of Contents
 
-- [Memory](#memory)
+- [Miscellaneous](#miscellaneous)
 - [Useful Functions](#useful-functions)
 
-# Memory
+# Miscellaneous
 
-- Pointer vs References 
-  - Reference cannot be reassigned
-  - Example: `float& damageRef = 1.0`
-    - This means that damageRef refers to the memory storing 1.0 
-    - Reassigning a value to damageRef will change the value in memory
+## Pointer vs References
+
+- Reference cannot be reassigned
+- Example: `float& damageRef = 1.0`
+  - This means that `damageRef` refers to the memory storing 1.0 
+  - Reassigning a value to `damageRef` will change the value in memory
+
+## pure, const, pureconst
+
+- `const` keyword with compile time enforcement that prevents data from being mutated. Variables, functions and methods can be `const`
+
+- `pure` is a promise that function does not mutate values or have other side effects
+
+- `pure const` is pure function enforcement at compile time  
+
+- *impure* just means not pure
+
+- **Note:** Not sure `pure` exists outside UE Editor
 
 # Useful Functions
 
