@@ -128,7 +128,7 @@ GetPlayerController()->ClientStartCameraShake(MyCameraShakeProperty);
 
 - Useful channel: `ECollisionChannel::ECC_Visibility`
 
-- **[ProjectDirectory]/Config/DefaultEngine.ini** contains the editer/c++ channel name mappings
+- Editor / c++ channel name mappings can be found in `[ProjectDirectory]/Config/DefaultEngine.ini`
 
 # Volume
 

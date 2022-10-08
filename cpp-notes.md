@@ -14,7 +14,9 @@
   - This means that `damageRef` refers to the memory storing 1.0 
   - Reassigning a value to `damageRef` will change the value in memory
 
-## pure, const, pureconst
+## pure, const, pure const
+
+- **Note: Not sure `pure` exists outside UE Editor**
 
 - `const` keyword with compile time enforcement that prevents data from being mutated. Variables, functions and methods can be `const`
 
@@ -24,8 +26,6 @@
 
 - *impure* just means not pure
 
-- **Note:** Not sure `pure` exists outside UE Editor
-
 # Useful Functions
 
 - `atan2` vs `atan` 
@@ -33,3 +33,5 @@
   - `atan2(y/x)` will resolve negative angles, and therefore work for full 360 degrees, `atan(y/x)` only works for 180 degrees
 
 - `ceil()` - Rounds a float up to an integer 
+
+
