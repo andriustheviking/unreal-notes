@@ -2,6 +2,7 @@
 
 ## Table of Contents
 
+- [Camera](#camera)
 - [GameMode](#gamemode)
   - [GameModeBase](#gamemodebase)
   - [GameMode](#gamemode--gamemodebase)
@@ -12,6 +13,42 @@
   - [Ambient Light](#ambient-light)
 
 ---
+
+# Camera
+
+- Players' camera must be "activated"
+
+## Springarm
+
+- Controls camera w/r/t player or whatever
+
+- Set Camera Lag and Rotation on springarm to give sense of inertia to camera
+
+## CameraShake
+
+- **Tip:** Easier to create and tweak properties in editer. So create a Blueprint of the camera shake object (ie BP_MyCameraShake)
+
+### MatineeCameraShake : UCameraShakeBase
+
+- Set Oscillation Properties to control shake
+  
+  - Good starting blueprint values: `Duration=0.25`, `inTime=0.1`, `outTime=0.11`
+  - `Location Oscillation` sets amplitude and frequency
+  - `Rotation` and `FOV Oscillation` can cause motion sickness
+
+- C++
+  
+  - Can reference **MatineeCameraShake** by declaring a `UPROPERTY()``TSubclassOf<BaseClass>` and then setting that property in the Editor to the Blueprint object (ie BP_MyCameraShake)
+    
+    #### Example:
+
+```cpp
+// Header
+UPROPERTY(EditAnywhere)
+TSubclassOf<class UCameraShakeBase> MyCameraShakeProperty;
+// Implementation (don't forget to check nullptr)
+GetPlayerController()->ClientStartCameraShake(MyCameraShakeProperty);
+```
 
 # GameMode
 

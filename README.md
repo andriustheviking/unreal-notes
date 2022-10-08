@@ -6,7 +6,7 @@ Welcome to my live notes taken for learning Unreal Engine.
 
 ## [Unreal Editor Notes](./unreal-editor-notes.md)
 
-## [Unreal Objects](./unreal-objects.md)
+## [Unreal Objects and Functions](./unreal-objects.md)
 
 # Todo:
 
