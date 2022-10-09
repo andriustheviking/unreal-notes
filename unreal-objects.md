@@ -37,17 +37,17 @@
 
 - Players' camera must be "activated"
 
-## Springarm
+### Springarm
 
 - Controls camera w/r/t player or whatever
 
 - Set Camera Lag and Rotation on springarm to give sense of inertia to camera
 
-## CameraShake
+### CameraShake
 
 - **Tip:** Easier to create and tweak properties in editer. So create a Blueprint of the camera shake object (ie BP_MyCameraShake)
 
-### MatineeCameraShake : UCameraShakeBase
+#### MatineeCameraShake : UCameraShakeBase
 
 - Set Oscillation Properties to control shake
   
@@ -72,7 +72,7 @@ GetPlayerController()->ClientStartCameraShake(MyCameraShakeProperty);
 
 # Components
 
-## UCharacterMovementComponent
+### UCharacterMovementComponent
   - `#include "GameFramework/CharacterMovementComponent.h"`
   - [Unreal Documentation](https://docs.unrealengine.com/5.0/en-US/API/Runtime/Engine/GameFramework/UCharacterMovementComponent/)
 
@@ -144,7 +144,7 @@ GetPlayerController()->ClientStartCameraShake(MyCameraShakeProperty);
 
 - Return Bool is the same as OutHit.BlockingHit
 
-## Trace Channel
+### Trace Channel
 
 - Groups traceability of objects and collision/overlap behaviors
 
@@ -156,13 +156,13 @@ GetPlayerController()->ClientStartCameraShake(MyCameraShakeProperty);
 
 # Volume
 
-## TriggerVolumeActor
+### TriggerVolumeActor
 
 - Volume to trigger game events
 
 - **Tip:** Make visible while editing
 
-## PostProcessingVolume
+### PostProcessingVolume
 
 - Can apply post processing details to specific volumes in level
 
