@@ -3,6 +3,7 @@
 ## Table of Contents
 
 - [Miscellaneous](#miscellaneous)
+- [AI](#ai)
 - [Blueprint](#blueprint)
   - [Blueprint Functions](#blueprint-functions)
 - [Viewport](#viewport)
@@ -25,6 +26,20 @@
 
 - FBX (FilmBox Format) is recommended mesh format in UE
 
+
+# AI
+
+### AI Controller
+
+ - See [AI Controller](./unreal-objects.md#ai-controllers)
+
+### Navigation Mesh
+
+- AI Need a navigation messh to show where they can and cannot navigate
+
+- Found in **Volume > Nav Mesh Bounds Volume**
+
+- **Tip:** [CharacterMovementComponent](./unreal-objects.md#UCharacterMovementComponent) `StopMovement()` + `DisableMovement()` will stop current movement immediately, and disable acceleration
 
 # Blueprint
 
@@ -61,6 +76,8 @@
 - **Shift + 6** - (Brush Editing) Enable brush editing
 
 - **Shift + B** - (Brush Editing) Selects all sides of a selected shape
+
+- **P** - Toggle Nav Mesh View
 
 ### Viewport Settings:
 

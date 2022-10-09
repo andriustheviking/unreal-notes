@@ -182,9 +182,16 @@
 
 ### ACharacter : APawn
 
-  Characters are Pawns that have a mesh, collision, and built-in movement logic. 
+  Characters are Pawns that have a humanoid mesh, collision, and built-in movement logic. 
   They are responsible for all physical interaction between the player or AI and the world, and also implement basic networking and input models. 
+
   *They are designed for a vertically-oriented player representation that can walk, jump, fly, and swim* using [CharacterMovementComponent](#UCharacterMovementComponent).
+
+### TargetPoint
+
+  - Point icon with no default behavior
+
+  - Useful as spawn points
 
 # Camera
 
@@ -269,6 +276,12 @@ GetPlayerController()->ClientStartCameraShake(MyCameraShakeProperty);
   - [Documentation](https://docs.unrealengine.com/5.0/en-US/API/Runtime/Engine/GameFramework/UProjectileMovementComponent/)
 
   - Can set on Actor with Tick disabled, which then moves the component *withou* updating the Actor's tick
+
+### OtherComponents
+
+  - **[UCapsuleComponent](https://docs.unrealengine.com/5.0/en-US/API/Runtime/Engine/Components/UCapsuleComponent/) : USceneComponent**
+
+  - **[UStaticMeshComponent](https://docs.unrealengine.com/5.0/en-US/API/Runtime/Engine/Components/UStaticMeshComponent/) : USceneComponent**
 
 # GameMode
 
