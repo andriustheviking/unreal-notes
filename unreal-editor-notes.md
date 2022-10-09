@@ -36,7 +36,7 @@
   - negative value with **Lerp** will push value past Lerp starting value
 
 - **AddMovementInput**
-  - Input speed controlled by [CharacterMovementComponent](../unreal-objects.md/#UCharacterMovementComponent)
+  - Input speed controlled by [CharacterMovementComponent](./unreal-objects.md#UCharacterMovementComponent)
 
 - **Append** - Use to concatinate strings in BP Editor
 - **Interpolate** - Linear Interpolation
