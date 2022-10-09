@@ -2,7 +2,11 @@
 
 ## Table of Contents
 
+- [Unreal Generic Objects](#unreal-generic-objects)
+  - [Math](#math)
 - [Camera](#camera)
+- [Components](#components)
+  - [UCharacterMovementComponent](#UCharacterMovementComponent)
 - [GameMode](#gamemode)
   - [GameModeBase](#gamemodebase)
   - [GameMode](#gamemode--gamemodebase)
@@ -15,6 +19,19 @@
 - [World](#uworld)
 
 ---
+
+# Unreal Generic Objects
+
+### Math
+
+- [Unreal Documentation](https://docs.unrealengine.com/5.0/en-US/API/Runtime/Core/Math/)
+
+- `TVector` 
+  - Vector type_def, can be 2, 3, 4 dimensional
+  - FVector (float), also can be int32 typed
+  - `GetSafeNormal` - Returns the normalized vector (aka amplitude of 1)
+- `FQuat` - Quaternion (aka Hamiltonion), like a 3D vector but additional dimension prevents gimbal lock
+- `Lerp` - Performs Linear Interperlation between to values
 
 # Camera
 
@@ -48,9 +65,16 @@
 // Header
 UPROPERTY(EditAnywhere)
 TSubclassOf<class UCameraShakeBase> MyCameraShakeProperty;
+
 // Implementation (don't forget to check nullptr)
 GetPlayerController()->ClientStartCameraShake(MyCameraShakeProperty);
 ```
+
+# Components
+
+## UCharacterMovementComponent
+  - `#include "GameFramework/CharacterMovementComponent.h"`
+  - [Unreal Documentation](https://docs.unrealengine.com/5.0/en-US/API/Runtime/Engine/GameFramework/UCharacterMovementComponent/)
 
 # GameMode
 
@@ -147,3 +171,7 @@ GetPlayerController()->ClientStartCameraShake(MyCameraShakeProperty);
 - **WorldContextObject** - all instanced objects in a world can be a WorldContextObject, so can pass `this` from any instance to provide the World Context
 
 - **TimeSeconds** - in-game time, changes with pauses, game speed, etc...
+
+### UWorld::GetWorld
+
+`UWorld * GetWorld()` - Callable from inside Actor, Components, etc dsnfjkl;ndsajndfjk;lnadsjkl;fnjnk;zxdgfnj

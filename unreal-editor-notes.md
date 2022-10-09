@@ -3,6 +3,8 @@
 ## Table of Contents
 
 - [Miscellaneous](#miscellaneous)
+- [Blueprint](#blueprint)
+  - [Blueprint Functions](#blueprint-functions)
 - [Viewport](#viewport)
   - [Viewport Settings](#viewport-settings)
   - [Brush Editing](#brush-editing)
@@ -22,6 +24,25 @@
 - Name types are case insensitive
 
 - FBX (FilmBox Format) is recommended mesh format in UE
+
+
+# Blueprint
+
+## Blueprint Functions
+
+- **AddTimeline**
+  - Can create keyframes for a specific value over a given timeframe.
+  - Has its own timeline editor (looks kind of like After Effects)
+  - negative value with **Lerp** will push value past Lerp starting value
+
+- **AddMovementInput**
+  - Input speed controlled by [CharacterMovementComponent](../unreal-objects.md/#UCharacterMovementComponent)
+
+- **Append** - Use to concatinate strings in BP Editor
+- **Interpolate** - Linear Interpolation
+- **Select** 
+  - Select an enum in BP Editor or for mapping values
+  - Useful to map `bool` value to different text ouputs
 
 # Viewport
 
