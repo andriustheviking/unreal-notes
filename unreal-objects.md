@@ -236,7 +236,7 @@ GetPlayerController()->ClientStartCameraShake(MyCameraShakeProperty);
 
   - Components default to NOT update on tick. Must set `PrimaryComponentTick.bCanEverTick = true;` in the class constructor. Set to `false` to save performance, if tick updating not needed.
 
-#### UActorComponent : UObject
+### UActorComponent : UObject
 
   - The **Base Component Class** for components that can be added to actors as properties.
 
@@ -244,7 +244,7 @@ GetPlayerController()->ClientStartCameraShake(MyCameraShakeProperty);
 
   - Useful for simple Components that only hold and manage data (i.e. Health)
 
-#### USceneComponent : UActorComponent 
+### USceneComponent : UActorComponent 
 
   - Has **Transform** and supports **Attachments**
 
@@ -253,7 +253,7 @@ GetPlayerController()->ClientStartCameraShake(MyCameraShakeProperty);
   - Methods
     - `SetupAttachment()` - Accepts parent to attach to component. Generally intended to be called from its Owning Actor's constructor
 
-#### UPrimitiveComponent : USceneComponent 
+### UPrimitiveComponent : USceneComponent 
 
   - [Documentation](https://docs.unrealengine.com/5.0/en-US/API/Runtime/Engine/Components/UPrimitiveComponent/)
 
