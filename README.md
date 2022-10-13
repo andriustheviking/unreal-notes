@@ -20,8 +20,8 @@ Welcome to my live notes taken for learning Unreal Engine.
 - [Sounds](./unreal-engine-notes.md#sounds)
 
 ## [Unreal Functions and Objects](./unreal-objects.md)
+- [Unreal Library](./unreal-objects.md#unreal-library)
 - [Unreal Objects](./unreal-objects.md#unreal-objects)
-- [Unreal Math Library](./unreal-objects.md#unreal-math-library)
 - [Actors](./unreal-objects.md#actors)
 - [Camera](./unreal-objects.md#camera)
 - [Components](./unreal-objects.md#components)

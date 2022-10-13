@@ -2,12 +2,15 @@
 
 ## Table of Contents
 
+- [Unreal Library](#unreal-library)
+- [Unreal Math Library](#unreal-math-library)
 - [Unreal Objects](#unreal-objects)
   - [TSubclassOf\<T\>](#tsubclassoft)
+  - [Multicast Delegate](#multicast-delegate)
   - [Constructors](#constructors)
   - [Precompiler Macros](#precompiler-macros)
   - [Logging](#logging)
-- [Unreal Math Library](#unreal-math-library)
+  - [GameFramework Library Objects](#GameFramework-Library-Objects)
 - [Actors](#actors)
   - [Actor Classes](#actor-classes)
   - [Controller](#controllers)
@@ -26,13 +29,56 @@
 
 ---
 
+# Unreal Library
+
+### Structs
+
+- `FName`
+  - `Name_None` is FName null equivalent
+
+### Classes
+
+ - `FString`
+  - If passing to `%s` token, need to dereference with `*` operator 
+
+### Functions
+
+ - `Destroy()`
+ - `GetName()`
+ - `GetOwner()`
+ - `SetOwner()`
+
+### DrawDebugHelpers.h
+ - `DrawDebugLine()`
+ - `DrawDebugSphere()`
+
+## Unreal Math Library
+
+- [Documentation](https://docs.unrealengine.com/5.0/en-US/API/Runtime/Core/Math/)
+
+### Structs
+
+- `TVector` 
+  - Vector type_def, can be 2, 3, 4 dimensional
+  - FVector (float), also can be int32 typed
+  - `GetSafeNormal` - Returns the normalized vector (aka amplitude of 1)
+
+- `TRotator`
+  - Similar to 3 dimensional TVector, but with rotation
+
+- `FQuat` - Quaternion (aka Hamiltonion), like a 3D rotator but additional dimension prevents gimbal lock
+
+### Functions
+
+- `Lerp` - Performs Linear Interperlation between to values
+
 # Unreal Objects
 
 ### Defining Objects
 
 - Define a new Unreal C++ objects in the Editor, go to **Tools > New C++ Class**. Can be defined from any existing class.
 
-# Unreal Object Lifecycle
+## Unreal Object Lifecycle
 
 ### TSubclassOf<T>
 
@@ -42,7 +88,7 @@
 
 - Can use this to then call super methods or spawn BP objects
 
-### Multicast Delegates
+### Multicast Delegate
 
 - Many-to-one delegate created via `DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE` precompiler macro.
 
@@ -122,19 +168,13 @@ DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_FiveParams( FComponentHitSignature, UP
   - Level `Fatal` will log, then crash program
   - `ulog` - CAPTNCAPS shortcut
 
+## GameFramework Library Objects
 
-# Unreal Math Library
-
-- [Unreal Documentation](https://docs.unrealengine.com/5.0/en-US/API/Runtime/Core/Math/)
-
-- `TVector` 
-  - Vector type_def, can be 2, 3, 4 dimensional
-  - FVector (float), also can be int32 typed
-  - `GetSafeNormal` - Returns the normalized vector (aka amplitude of 1)
-
-- `FQuat` - Quaternion (aka Hamiltonion), like a 3D vector but additional dimension prevents gimbal lock
-
-- `Lerp` - Performs Linear Interperlation between to values
+ - `UDamageType`
+  - `#include "GameFramework/DamageType.h"`
+  - A DamageType is intended to define and describe a particular form of damage and to provide an avenue for customizing responses to damage from various sources.For example, a game could make a DamageType_Fire set it up to ignite the damaged actor. 
+  - DamageTypes are never instanced and should be treated as immutable data holders with static code functionality. They should never be stateful.
+  - Can use `::StaticClass()` to get `TSublclassOf<UDamageType>` to get the damage type received
 
 # Actors
 
@@ -171,35 +211,76 @@ DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_FiveParams( FComponentHitSignature, UP
     - Whether to teleport the physics state (if physics enabled)
     - If true, physics velocity for this object is unchanged (so ragdoll parts are not affected by change in location). If false, physics velocity is updated based on the change in position (affecting ragdoll parts).
 
+- `FTakeAnyDamageSignature OnTakeAnyDamage`
+  - **[Multicast Delegate](#multicast-delegate)**
+  - Example:
+  ```
+    // when this object receives damage, the delegate will call our defined method DamageTaken 
+    GetOwner()->OnTakeAnyDamage.AddDynamic(this, &UHealthComponent::DamageTaken);
+  ```
+
+- `GetInstigatorController()` - Needed for `ApplyDamage`
+
+- `SetActorHiddenInGame(bool)` - hides actor
+
+- `SetActorTickEnabled(bool)` - enables/disables tick call
+
 ### APawn : AActor
 
   Pawn is the base class of all actors that can be possessed by Players or AI. Pawns are controlled by Controllers  
 
-### Controllers
+#### Pawn Methods
+
+- `APawn::SetupPlayerInputComponent` 
+  - Allows a Pawn to set up custom input bindings. Called upon possession by a [UPlayerController](#player-controller) , using the `InputComponent` created by `CreatePlayerInputComponent()`.
+  - implement function override to bind player input to pawn
+  - Action Input Events:
+  ```cpp
+    enum EInputEvent
+    {
+        IE_Pressed        =0,
+        IE_Released       =1,
+        IE_Repeat         =2,
+        IE_DoubleClick    =3,
+        IE_Axis           =4,
+        IE_MAX            =5,
+    }
+  ```
+  - `BindAxis()` / `BindAction()`
+    - Example:
+    ```cpp
+    // binds the "MoveForward" input axis (defined in Project Settings) to call ATank::Move on this
+    PlayerInputComponent->BindAxis(TEXT("MoveForward"), this, &ATank::Move);
+    ```
+
+
+## Controllers
 
   Controllers are non-physical Actors that can possess a **Pawn** (or derived class). By default, there is a one-to-one relationship between Controllers and Pawns; meaning, each Controller controls only one Pawn at any given time.
 
   - Methods:
     - `ControlRotation` sets the Pawn rotation
 
-#### AI Controllers
+### AI Controllers
   
   - AI Controllers are automatically created and assigned to non-player character blueprints manually placed in a level.
   - **Note:** By default, characters spawned at runtime have **autoposses OFF**. Can set to automatically have ON in BP Details
   - AI Movement requires an [AI Navigation Mesh](./unreal-editor-notes.md#navigation-mesh)
 
-#### Player Controllers
+### Player Controllers
   
   - Accepts player input and issues commands to Player Pawn
   - **Autoposses Player** sets player pawn automatically at beginning of level
-  - Methods:
-    - `GetHitResultUnderCursor()` Gets the hit result under cursor, (i.e. top down ARPG)
-    - `SetupPlayerInputComponent()` - binds player input to pawn.
-      - Example:
-      ```cpp
-      // This binds the Move Forward input axis (defined in Project Settings) to call ATank::Move on this
-      PlayerInputComponent->BindAxis(TEXT("MoveForward"), this, &ATank::Move);
-      ```
+
+#### Player Controller Methods
+
+  - `GetHitResultUnderCursor()` Gets the hit result under cursor, (i.e. top down ARPG)
+  - `SetupPlayerInputComponent()` - binds player input to pawn.
+    - Example:
+    ```cpp
+    // This binds the Move Forward input axis (defined in Project Settings) to call ATank::Move on this
+    PlayerInputComponent->BindAxis(TEXT("MoveForward"), this, &ATank::Move);
+    ```
 
 ### ACharacter : APawn
 
@@ -285,7 +366,7 @@ GetPlayerController()->ClientStartCameraShake(MyCameraShakeProperty);
 #### UPrimitiveComponent Methods
 
   - `FComponentHitSignature OnComponentHit`
-    - **[Multicast Delegate](#multicast-delegates)**
+    - **[Multicast Delegate](#multicast-delegate)**
     - For collisions during physics simulation to generate hit events, **Simulation Generates Hit Events** must be enabled for this component. 
     - **Note:** `NormalImpulse` will be filled in for physics-simulating bodies, but will be zero for swept-component blocking collisions.
     - Requires `CollisionEnabledQueryAndPhysics` to be enabled for collision on the calling object
@@ -354,11 +435,11 @@ GetPlayerController()->ClientStartCameraShake(MyCameraShakeProperty);
 - Can be assigned to a socket on a skeletal mesh
 - Can be Activated / Deactivated
 
-## `SpawnEmitterAtLocation` 
+## SpawnEmitterAtLocation 
 
 Function that can spawn particles
 
-## `UParticleSystem` 
+## UParticleSystem 
 
   - `#include "Particles/ParticleSystem.h"`
 
@@ -368,7 +449,7 @@ Function that can spawn particles
 
   - Created with `SpawnEmitterAtLocation`
 
-## `UParticleSystemComponent`
+## UParticleSystemComponent
 
   - `#include "Particles/ParticleSystemComponent.h"`
 

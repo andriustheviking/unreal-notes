@@ -141,7 +141,7 @@ You can use Animation Montages (Montages) to combine several Animation Sequences
 
 - Unreal only considers the root component for collisions.
 
-- To enable collision set the collision mesh to Blueprint’s **DefaultSceneRoot**, and set the motion event (ie AddActorLocalOffset) to **Sweep**
+- To enable collision set the collision mesh to Blueprint’s **DefaultSceneRoot**, and set the motion event (ie [AddActorLocalOffset](./unreal-objects#actor-methods)) to **Sweep**
 
 - **Note:** An actor that doesn’t have their collision as the root can still block other actors. But, if you move the actor, it will not collide with anything
 
