@@ -15,6 +15,9 @@ Welcome to my live notes taken for learning Unreal Engine.
 - [Animation](./unreal-engine-notes.md#animation)
 - [Light](./unreal-engine-notes.md#light)
 - [Physics](./unreal-engine-notes.md#physics)
+- [Material](./unreal-engine-notes.md#material)
+- [Particles](./unreal-engine-notes.md#particles)
+- [Sounds](./unreal-engine-notes.md#sounds)
 
 ## [Unreal Functions and Objects](./unreal-objects.md)
 - [Unreal Objects](./unreal-objects.md#unreal-objects)
@@ -24,6 +27,7 @@ Welcome to my live notes taken for learning Unreal Engine.
 - [Components](./unreal-objects.md#components)
 - [GameMode](./unreal-objects.md#gamemode)
 - [Level](./unreal-objects.md#level)
+- [Particles](./unreal-objects.md#particles)
 - [Trace](./unreal-objects.md#trace)
 - [Volume](./unreal-objects.md#volume)
 - [World](./unreal-objects.md#uworld)

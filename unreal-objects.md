@@ -19,6 +19,7 @@
   - [GameModeBase](#gamemodebase)
   - [GameMode](#gamemode--gamemodebase)
 - [Level](#level)
+- [Particles](#particles)
 - [Trace](#trace)
 - [Volume](#volume)
 - [World](#uworld)
@@ -40,6 +41,29 @@
 - Useful to reference classes in C++ which were defined in the Editor. (i.e. Blueprints) 
 
 - Can use this to then call super methods or spawn BP objects
+
+### Multicast Delegates
+
+- Many-to-one delegate created via `DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE` precompiler macro.
+
+- `Broadcast()` executes all delegate callbacks
+
+- To get the call signature, need to look up the constructor macro in the Unreal header file
+
+- Add callback with `DelegateName->AddDynamic()`
+
+- **Note:** Callbacks passed to the delegate must be declared with **`UFUNCTION()`** macro
+
+- **Example:** For Collision Delegate, first three parameters build the delegate property for UPrimitiveComponent. The rest are the Hit Component delegate signature
+
+```cpp
+/**
+ * Delegate for notification of blocking collision against a specific component.  
+ * NormalImpulse will be filled in for physics-simulating bodies, but will be zero for swept-component blocking collisions.
+ */
+DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_FiveParams( FComponentHitSignature, UPrimitiveComponent, OnComponentHit, UPrimitiveComponent*, HitComponent, AActor*, OtherActor, UPrimitiveComponent*, OtherComp, FVector, NormalImpulse, const FHitResult&, Hit );
+//... next declaration with differen params
+```
 
 ### Constructors
 
@@ -194,7 +218,7 @@
 
 - Players' camera must be "activated"
 
-### Springarm
+### SpringArm
 
 - Controls camera w/r/t player or whatever
 
@@ -258,6 +282,14 @@ GetPlayerController()->ClientStartCameraShake(MyCameraShakeProperty);
 
   - Used to be rendered or used with collision data
 
+#### UPrimitiveComponent Methods
+
+  - `FComponentHitSignature OnComponentHit`
+    - **[Multicast Delegate](#multicast-delegates)**
+    - For collisions during physics simulation to generate hit events, **Simulation Generates Hit Events** must be enabled for this component. 
+    - **Note:** `NormalImpulse` will be filled in for physics-simulating bodies, but will be zero for swept-component blocking collisions.
+    - Requires `CollisionEnabledQueryAndPhysics` to be enabled for collision on the calling object
+
 ### UCharacterMovementComponent
 
   - `#include "GameFramework/CharacterMovementComponent.h"`
@@ -273,6 +305,19 @@ GetPlayerController()->ClientStartCameraShake(MyCameraShakeProperty);
   - [Documentation](https://docs.unrealengine.com/5.0/en-US/API/Runtime/Engine/GameFramework/UProjectileMovementComponent/)
 
   - Can set on Actor with Tick disabled, which then moves the component *withou* updating the Actor's tick
+
+### UPhysicsHandleComponent
+
+  - `#include "PhysicsEngine/PhysicsHandleComponent.h"`
+
+  - [Documentation](#https://docs.unrealengine.com/5.0/en-US/API/Runtime/Engine/PhysicsEngine/UPhysicsHandleComponent/)
+
+  - ActorComponent Subclass to add interface for grabbability, rotation etc. 
+
+  - **Tip:** Then can get it in C++ using 
+      ```
+      GetOwner()->FindComponentByClass<UPhysicsHandleComponent >()
+      ```
 
 ### OtherComponents
 
@@ -303,6 +348,39 @@ GetPlayerController()->ClientStartCameraShake(MyCameraShakeProperty);
 # Level
 
 > Levels contain other Actors and provide the environment for your game's players.
+
+# Particles
+
+- Can be assigned to a socket on a skeletal mesh
+- Can be Activated / Deactivated
+
+## `SpawnEmitterAtLocation` 
+
+Function that can spawn particles
+
+## `UParticleSystem` 
+
+  - `#include "Particles/ParticleSystem.h"`
+
+  - [Documentation](https://docs.unrealengine.com/5.0/en-US/API/Runtime/Engine/Particles/UParticleSystem/)
+
+  - **Not a component.**
+
+  - Created with `SpawnEmitterAtLocation`
+
+## `UParticleSystemComponent`
+
+  - `#include "Particles/ParticleSystemComponent.h"`
+
+  - [Documentation](https://docs.unrealengine.com/5.0/en-US/API/Runtime/Engine/Particles/UParticleSystemComponent/)
+
+  - Created with `CreateDefaultSubobject`
+
+  - Can attach to a component.
+
+  - Emits particles.
+
+  - Uses a template. 
 
 # Trace
 
