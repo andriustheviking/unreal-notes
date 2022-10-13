@@ -1,4 +1,4 @@
-# Unreal Objects
+# Unreal Functions and Objects
 
 ## Table of Contents
 
@@ -306,40 +306,6 @@ GetPlayerController()->ClientStartCameraShake(MyCameraShakeProperty);
 # Level
 
 > Levels contain other Actors and provide the environment for your game's players.
-
-# Light
-
-- Three types of rendering: **Static, Stationary,** and **Movable**
-  
-  - Static and Stationary are Pre-rendered.
-  
-  - Moveable is rendered dynamically
-
-- **Lumen** - UE5 light renderer
-  
-  - Works best with **Moveable** lights
-  
-  - Buggy with Material "Pixel Depth Offset"
-
-- **AutoExposure** (aka Eye Adaptation)
-  
-  - Post processing effect of the eye adjusting to ambient light (ie Bethesda "Step out moment").
-  
-  - Available in **Project Settings**
-  
-  - Alternatively can add a [PostProcessingVolume](#postprocessingvolume), then go to **Exposure > Metering** and switch from **AutoExposureHistogram** to **AutoExposureBasic**.
-
-### Sky Light
-
-- Calculates light from the skybox
-
-- Alternatively can set a default cube map to apply ambient light
-
-### Ambient Light
-
-- Can connect Sky Light and Directional Light so that the Sky light properties accurately reflect the angle of the directional light.
-  
-  - The skybox will move the sun to where the Direction source is
 
 # Trace
 
