@@ -18,7 +18,7 @@
 
 ### AI Controller
 
- - See [AI Controller](./unreal-objects.md#ai-controllers)
+ - See [AI Controller Object](./unreal-objects.md#ai-controllers)
 
 ### Navigation Mesh
 
