@@ -29,6 +29,8 @@ Welcome to my live notes taken for learning Unreal Engine.
 - [GameMode](./unreal-objects.md#gamemode)
 - [Level](./unreal-objects.md#level)
 - [Particles](./unreal-objects.md#particles)
+- [Sound](./unreal-objects.md#sound)
+- [Timer](./unreal-objects.md#timer)
 - [Trace](./unreal-objects.md#trace)
 - [Volume](./unreal-objects.md#volume)
 - [World](./unreal-objects.md#uworld)
