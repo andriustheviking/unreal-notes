@@ -22,6 +22,7 @@ Welcome to my live notes taken for learning Unreal Engine.
 ## [Unreal Functions and Objects](./unreal-objects.md)
 - [Unreal Library](./unreal-objects.md#unreal-library)
 - [Unreal Objects](./unreal-objects.md#unreal-objects)
+- [Kismet Library](./unreal-objects.md#kismet-library)
 - [Actors](./unreal-objects.md#actors)
 - [Camera](./unreal-objects.md#camera)
 - [Components](./unreal-objects.md#components)

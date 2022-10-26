@@ -206,3 +206,4 @@ You can only create dynamic material instances during gameplay. You can use Blue
 	- This can be at a Location, Attached to object, or 2D (ie non-spacialized)
 	- **Stop** will stop the sound cue
 	- **AutoDestroy** the sound component instance to remove it from the game
+- See [Sound](./unreal-objects.md#sound) for implelmentation details

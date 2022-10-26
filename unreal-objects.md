@@ -11,6 +11,7 @@
   - [Precompiler Macros](#precompiler-macros)
   - [Logging](#logging)
   - [GameFramework Library Objects](#GameFramework-Library-Objects)
+- [Kismet Library](#kismet-library)
 - [Actors](#actors)
   - [Actor Classes](#actor-classes)
   - [Controller](#controllers)
@@ -170,13 +171,52 @@ DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_FiveParams( FComponentHitSignature, UP
 
 ## GameFramework Library Objects
 
- - `UDamageType`
-  - `#include "GameFramework/DamageType.h"`
-  - A DamageType is intended to define and describe a particular form of damage and to provide an avenue for customizing responses to damage from various sources.For example, a game could make a DamageType_Fire set it up to ignite the damaged actor. 
-  - DamageTypes are never instanced and should be treated as immutable data holders with static code functionality. They should never be stateful.
-  - Can use `::StaticClass()` to get `TSublclassOf<UDamageType>` to get the damage type received
+### `UDamageType`
+- `#include "GameFramework/DamageType.h"`
+- A DamageType is intended to define and describe a particular form of damage and to provide an avenue for customizing responses to damage from various sources.For example, a game could make a DamageType_Fire set it up to ignite the damaged actor. 
+- DamageTypes are never instanced and should be treated as immutable data holders with static code functionality. They should never be stateful.
+- Can use `::StaticClass()` to get `TSublclassOf<UDamageType>` to get the damage type received
+
+# Kismet Library
+
+## `#include "Kismet/GameplayStatics.h"`
+
+- `GetWorldDeltaSeconds(ths)`
+  - can get DeltaTime outside of Tick function. 
+  - **`this`** will pass in the context for the world via the instance’d object
+
+- `GetPlayerPawn(const UObject* WorldContextObject, int32 PlayerIndex)`
+
+- `GetPlayerController(const UObject* WorldContextObject, int32 PlayerIndex)`
+
+- `ApplyDamage()`
+  - will cause *`OnTakeAnyDamage`* to be called called on object
+  - Example:
+    ```cpp
+    UGameplayStatics::ApplyDamage(OtherActor, ProjectileDamage, GetOwner()->GetInstigatorController(), this, UDamageType::StaticClass());
+    ```
+
+- `GetAllActorsOfClass(const UObject *WorldContextObject, TSubclassOf<AActor> ActorClass, TArray<AActor*> &OutActors)`
+
+- `SpawnEmitterAtLocation()`
+  - See [SpawnEmitterAtLocation](#SpawnEmitterAtLocation)
 
 # Actors
+
+## Spawning Actors `SpawnActor<T>(UClass, …)`
+
+  - `SpawnActor<T>(UClass, …)`
+
+  - This creates a new object of class UClass but returns it of type T, *which allows us to create BP class objects and reference them in C++ using C++ declared parent objects.*
+
+  - *Tip:* Use this in conjunction with `TSubclassOf<T>`
+
+  - [Documentation](https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/ProgrammingWithCPP/UnrealArchitecture/Actors/Spawning/ )
+
+#### Example
+```cpp
+GetWorld()->SpawnActor<AProjectile>(BPProjectileClass, spawnLocation, spawnRotation );
+```
 
 ### Actor Tags
 
@@ -309,7 +349,7 @@ DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_FiveParams( FComponentHitSignature, UP
 
 - **Tip:** Easier to create and tweak properties in editer. So create a Blueprint of the camera shake object (ie BP_MyCameraShake)
 
-#### MatineeCameraShake : UCameraShakeBase
+### MatineeCameraShake : UCameraShakeBase
 
 - Set Oscillation Properties to control shake
   
@@ -317,20 +357,24 @@ DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_FiveParams( FComponentHitSignature, UP
   - `Location Oscillation` sets amplitude and frequency
   - `Rotation` and `FOV Oscillation` can cause motion sickness
 
-- C++
-  
-  - Can reference **MatineeCameraShake** by declaring a `UPROPERTY()``TSubclassOf<BaseClass>` and then setting that property in the Editor to the Blueprint object (ie BP_MyCameraShake)
-    
-    #### Example:
+  - **Note:** Camera shaking is best configured in Editor, so we use `UPROPERTY` to define and set the implementation class, which we can then access and call in c++
 
-```cpp
-// Header
-UPROPERTY(EditAnywhere)
-TSubclassOf<class UCameraShakeBase> MyCameraShakeProperty;
+#### `ClientStartCameraShake()` Example
 
-// Implementation (don't forget to check nullptr)
-GetPlayerController()->ClientStartCameraShake(MyCameraShakeProperty);
-```
+  We reference **MatineeCameraShake** by declaring a `UPROPERTY() TSubclassOf<BaseClass>` and then setting that property in the Editor to the Blueprint object (ie BP_MyCameraShake)
+
+  Header File
+  ```cpp
+  // We set this UPROPERTY in the editor to a BP class we define and configure for camera shaking
+  UPROPERTY(EditAnywhere)
+  TSubclassOf<class UCameraShakeBase> MyCameraShakePropertyClass;
+  ```
+  Implementation
+  ```cpp
+  if (MyCameraShakePropertyClass != nullptr) {
+    GetPlayerController()->ClientStartCameraShake(MyCameraShakePropertyClass);
+  }
+  ```
 
 # Components
 
@@ -366,10 +410,16 @@ GetPlayerController()->ClientStartCameraShake(MyCameraShakeProperty);
 #### UPrimitiveComponent Methods
 
   - `FComponentHitSignature OnComponentHit`
-    - **[Multicast Delegate](#multicast-delegate)**
+    - **[Multicast Delegate](#multicast-delegate)** *(callback must be a `UFUNCTION()`)*
+    - Requires `CollisionEnabledQueryAndPhysics` to be enabled for collision on the calling object
     - For collisions during physics simulation to generate hit events, **Simulation Generates Hit Events** must be enabled for this component. 
     - **Note:** `NormalImpulse` will be filled in for physics-simulating bodies, but will be zero for swept-component blocking collisions.
-    - Requires `CollisionEnabledQueryAndPhysics` to be enabled for collision on the calling object
+    - Example binding:
+    ```cpp
+      BaseMeshComponent->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);
+    ```
+      - Where `OnHit` is the callback we defined
+
 
 ### UCharacterMovementComponent
 
@@ -436,8 +486,12 @@ GetPlayerController()->ClientStartCameraShake(MyCameraShakeProperty);
 - Can be Activated / Deactivated
 
 ## SpawnEmitterAtLocation 
-
-Function that can spawn particles
+  
+  - Spawns a **`UParticleSystem`**
+  
+  - Defaults to spawn one particle effect, but can spawn multiple
+  
+  - Fire and forget (crreation and deletion is handled)
 
 ## UParticleSystem 
 
@@ -462,6 +516,53 @@ Function that can spawn particles
   - Emits particles.
 
   - Uses a template. 
+
+# Sound
+
+  - `#include "Sound/SoundBase.h"`
+
+  - See also [Sounds](./unreal-engine-notes#sounds)
+
+### USoundBase
+
+  - Sound base class
+
+# Timer
+
+Use `FTimerManager` and `FTimerHandle` to setup timer event scheduling. The FTimer class contains references to world timer functions.
+
+### FTimerHandle
+
+`#include "Engine/EngineTypes.h"`
+
+## TimerManager
+
+`#include "TimerManager.h"`
+
+### FTimerManager
+
+  - `SetTimer(...)` sets the timer
+
+  - Can access via `AActor::GetWorldTimerManager` or `UWorld::GetTimerManager`
+
+### FTimerDelegate
+
+  - Use to bind callbacks with parameters
+
+  - Create with `::CreateUObject()`
+
+  - Example:
+  ```cpp
+  FTimerDelegate PlayerStartTimerDelegate = FTimerDelegate::CreateUObject(
+    ToonTanksPlayerController,
+    &AToonTanksPlayerController::SetPlayerEnabledState,
+    true);
+```
+    - Where `ToonTanksPlayerController` is the object that’s called on
+
+### FTimer
+
+`#include "RenderCore.h"`
 
 # Trace
 
