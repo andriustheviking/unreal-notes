@@ -520,7 +520,7 @@ DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_FiveParams( FComponentHitSignature, UP
 
   - `#include "Sound/SoundBase.h"`
 
-  - See also [Sounds](./unreal-engine-notes#sounds)
+  - See also [Sounds](./unreal-engine-notes.md#sounds)
 
 ### USoundBase
 
