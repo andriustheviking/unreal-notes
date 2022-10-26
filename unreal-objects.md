@@ -24,6 +24,8 @@
   - [GameMode](#gamemode--gamemodebase)
 - [Level](#level)
 - [Particles](#particles)
+- [Sound](#sound)
+- [Timer](#timer)
 - [Trace](#trace)
 - [Volume](#volume)
 - [World](#uworld)
@@ -179,7 +181,7 @@ DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_FiveParams( FComponentHitSignature, UP
 
 # Kismet Library
 
-## `#include "Kismet/GameplayStatics.h"`
+`#include "Kismet/GameplayStatics.h"`
 
 - `GetWorldDeltaSeconds(ths)`
   - can get DeltaTime outside of Tick function. 
@@ -203,7 +205,7 @@ DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_FiveParams( FComponentHitSignature, UP
 
 # Actors
 
-## Spawning Actors `SpawnActor<T>(UClass, …)`
+### Spawning Actors `SpawnActor<T>(UClass, …)`
 
   - `SpawnActor<T>(UClass, …)`
 
@@ -213,10 +215,10 @@ DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_FiveParams( FComponentHitSignature, UP
 
   - [Documentation](https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/ProgrammingWithCPP/UnrealArchitecture/Actors/Spawning/ )
 
-#### Example
-```cpp
-GetWorld()->SpawnActor<AProjectile>(BPProjectileClass, spawnLocation, spawnRotation );
-```
+  - Example:
+  ```cpp
+    GetWorld()->SpawnActor<AProjectile>(BPProjectileClass, spawnLocation, spawnRotation );
+  ```
 
 ### Actor Tags
 
@@ -359,21 +361,18 @@ GetWorld()->SpawnActor<AProjectile>(BPProjectileClass, spawnLocation, spawnRotat
 
   - **Note:** Camera shaking is best configured in Editor, so we use `UPROPERTY` to define and set the implementation class, which we can then access and call in c++
 
-#### `ClientStartCameraShake()` Example
-
-  We reference **MatineeCameraShake** by declaring a `UPROPERTY() TSubclassOf<BaseClass>` and then setting that property in the Editor to the Blueprint object (ie BP_MyCameraShake)
-
-  Header File
+  - `ClientStartCameraShake()` Example:
+    - We reference **MatineeCameraShake** by declaring a `UPROPERTY() TSubclassOf<BaseClass>` and then setting that property in the Editor to the Blueprint object (ie BP_MyCameraShake)
   ```cpp
-  // We set this UPROPERTY in the editor to a BP class we define and configure for camera shaking
-  UPROPERTY(EditAnywhere)
-  TSubclassOf<class UCameraShakeBase> MyCameraShakePropertyClass;
-  ```
-  Implementation
-  ```cpp
-  if (MyCameraShakePropertyClass != nullptr) {
-    GetPlayerController()->ClientStartCameraShake(MyCameraShakePropertyClass);
-  }
+    // Header
+    // We set this UPROPERTY in the editor to a BP class we define and configure for camera shaking
+    UPROPERTY(EditAnywhere)
+    TSubclassOf<class UCameraShakeBase> MyCameraShakePropertyClass;
+
+    // Implementation
+    if (MyCameraShakePropertyClass != nullptr) {
+      GetPlayerController()->ClientStartCameraShake(MyCameraShakePropertyClass);
+    }
   ```
 
 # Components
@@ -553,12 +552,9 @@ Use `FTimerManager` and `FTimerHandle` to setup timer event scheduling. The FTim
 
   - Example:
   ```cpp
-  FTimerDelegate PlayerStartTimerDelegate = FTimerDelegate::CreateUObject(
-    ToonTanksPlayerController,
-    &AToonTanksPlayerController::SetPlayerEnabledState,
-    true);
-```
-    - Where `ToonTanksPlayerController` is the object that’s called on
+  FTimerDelegate PlayerStartTimerDelegate = FTimerDelegate::CreateUObject(ToonTanksPlayerController, &AToonTanksPlayerController::SetPlayerEnabledState, true);
+  // Where `ToonTanksPlayerController` is the object that’s called on
+  ```
 
 ### FTimer
 
