@@ -5,7 +5,7 @@
 - [Unreal Library](#unreal-library)
 - [Unreal Math Library](#unreal-math-library)
 - [Unreal Objects](#unreal-objects)
-  - [TSubclassOf\<T\>](#tsubclassoft)
+  - [TSubclassOf\<T\>](#tsubclassof-t)
   - [Multicast Delegate](#multicast-delegate)
   - [Constructors](#constructors)
   - [Precompiler Macros](#precompiler-macros)
@@ -13,6 +13,7 @@
   - [GameFramework Library Objects](#GameFramework-Library-Objects)
 - [Kismet Library](#kismet-library)
 - [Actors](#actors)
+  - [Spawning Actors](#spawn-actors)
   - [Actor Classes](#actor-classes)
   - [Controller](#controllers)
 - [Camera](#camera)
@@ -205,7 +206,9 @@ DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_FiveParams( FComponentHitSignature, UP
 
 # Actors
 
-### Spawning Actors `SpawnActor<T>(UClass, …)`
+### Spawning Actors 
+  
+#### `SpawnActor<T>(UClass, …)`
 
   - [Documentation](https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/ProgrammingWithCPP/UnrealArchitecture/Actors/Spawning/ )
 
