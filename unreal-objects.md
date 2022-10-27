@@ -183,7 +183,7 @@ DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_FiveParams( FComponentHitSignature, UP
 
 `#include "Kismet/GameplayStatics.h"`
 
-- `GetWorldDeltaSeconds(ths)`
+- `GetWorldDeltaSeconds(this)`
   - can get DeltaTime outside of Tick function. 
   - **`this`** will pass in the context for the world via the instance’d object
 
@@ -207,17 +207,18 @@ DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_FiveParams( FComponentHitSignature, UP
 
 ### Spawning Actors `SpawnActor<T>(UClass, …)`
 
-  - `SpawnActor<T>(UClass, …)`
+  - [Documentation](https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/ProgrammingWithCPP/UnrealArchitecture/Actors/Spawning/ )
 
   - This creates a new object of class UClass but returns it of type T, *which allows us to create BP class objects and reference them in C++ using C++ declared parent objects.*
 
-  - *Tip:* Use this in conjunction with `TSubclassOf<T>`
-
-  - [Documentation](https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/ProgrammingWithCPP/UnrealArchitecture/Actors/Spawning/ )
+  - **Tip:** Use this in conjunction with a property of type `TSubclassOf<T>`, which will then be of type `UClass`. Then assign the class type in UE editor to a BP child of that parent class.
+  
+  - **Note:** Remember to check against nullptr
 
   - Example:
   ```cpp
-    GetWorld()->SpawnActor<AProjectile>(BPProjectileClass, spawnLocation, spawnRotation );
+    // BPProjectileClass is a property of type TSubclassOf<AProjectile> which we assign in UE editor.
+    AProjectile *BPProjectileInstance = GetWorld()->SpawnActor<AProjectile>(BPProjectileClass, spawnLocation, spawnRotation );
   ```
 
 ### Actor Tags
