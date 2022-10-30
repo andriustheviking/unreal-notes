@@ -37,11 +37,13 @@
 
 - Can be animated.
 
+- Meshes that use the same skeleton can use the same animations.
+
 - **Sockets** used to attach meshes to skeletal meshes
 
 ## Animation Blueprint
 
-- Controls the animation of a skeletal mesh
+- Controls the animation to a specific skeletal mesh. The skeleton is selected when the ABP is created
 
 - **Note:** Remember to assign the **AnimationBlueprint** to the Character BP
 
@@ -57,7 +59,43 @@ Generally speaking, to set and transition animations you can use blend or a stat
 
 - [Documentation](https://docs.unrealengine.com/4.27/en-US/AnimatingObjects/SkeletalMeshAnimation/NodeReference/Blend/)
 
+- There are many different kinds of blends. These blend animations based off of a value
+
+- **Blend** standard blend uses an alpha channel
+
 - **Blend Poses By Bool** a node that performs a time-based blend between two poses using a Boolean value as the key.
+
+### Blendspace
+
+  - Blends between multiple animations via 2D graph
+
+  - Great for locomotion. 
+
+  - Can reference Blendspaces directly in AnimGraph, or using StateMachine
+
+  - **Note:** in a **Statemachine State** you want to use a **blendspace** to blend between animation
+
+  - **Tips:**
+    
+    - Enable labels in blendspace to see the animation labels
+
+    - Tap Ctrl on keyboard to move preview point under mouse cursor
+  
+  - Example Usage Flow: **ABP > AnimGraph > StateMachine > State > Blendspace > Drag and drop animation to graph point**
+
+#### Character Movement Animation Using Blendspace
+
+  - In blendspace, use Angle for X-axis (-180, 180)  and Speed for Y-axis, as opposed to Forward / Right. This will allow better transition for all angles of movement.
+
+  - Getting actor relative velocity direction:
+
+    - **Transform** methods convert local space to global space, while **InverseTransform** global to local. So to get the velocity of an object *relative to itself,* use an **InverseTransform** of the global velocity, passing in the Actor Transform, to get the velocity of the actor relative its own transform.
+
+    - With the actor relative transform, convert the vector to a Rotator and get the Yaw
+
+  - Match animation speed to global velocity to prevent sliding:
+
+    - 
 
 ### StateMachine
 
@@ -68,10 +106,6 @@ Generally speaking, to set and transition animations you can use blend or a stat
     - **Add State > Assign Animation**
       - **Note:** Can set Loop behavior
     - Link States with Transition rules
-
-- **Blendspace** blends between animation
-  - **Note:** in a **Statemachine State** you want to use a **blendspace** to blend between animation
-  - Example Usage Flow: **ABP > AnimGraph > StateMachine > State > Blendspace > Drag and drop animation to graph point**
 
 ## ABP Event Graph
   - Can access the AnimationBP inside a Pawn’s EventGraph *via the Pawn’s associated Mesh*

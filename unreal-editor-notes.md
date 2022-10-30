@@ -69,6 +69,13 @@
 
 - **Engine Scalability Settings** changes the viewport rendering settings
 
+- Can filter viewport to see different attributes of level.
+- Useful Viewport filters:
+  - Lit (Default)
+  - Unlit
+  - Player Collision
+  - Visibility Collission
+
 ### Brush Editing:
 
 - Tool to quickly create geometry. 

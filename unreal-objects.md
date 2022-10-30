@@ -14,7 +14,9 @@
 - [Kismet Library](#kismet-library)
 - [Actors](#actors)
   - [Spawning Actors](#spawn-actors)
-  - [Actor Classes](#actor-classes)
+  - [Actor](#actor-classes)
+  - [Pawn](#apawn--aactor)
+  - [Character](#acharacter--apawn)
   - [Controller](#controllers)
 - [Camera](#camera)
 - [Components](#components)
@@ -271,7 +273,7 @@ DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_FiveParams( FComponentHitSignature, UP
 
 - `SetActorTickEnabled(bool)` - enables/disables tick call
 
-### APawn : AActor
+## APawn : AActor
 
   Pawn is the base class of all actors that can be possessed by Players or AI. Pawns are controlled by Controllers  
 
@@ -292,12 +294,38 @@ DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_FiveParams( FComponentHitSignature, UP
         IE_MAX            =5,
     }
   ```
-  - `BindAxis()` / `BindAction()`
-    - Example:
-    ```cpp
-    // binds the "MoveForward" input axis (defined in Project Settings) to call ATank::Move on this
-    PlayerInputComponent->BindAxis(TEXT("MoveForward"), this, &ATank::Move);
-    ```
+  - `BindAxis()`
+    - Example: `PlayerInputComponent->BindAxis(TEXT("MoveForward"), this, &ATank::Move);`
+    - NOTE: Joystick axis input will be frame-rate independent. Need to Account for variable framerate
+
+  - `BindAction`
+    - Example: `PlayerInputComponent->BindAction(TEXT("Jump"), EInputEvent::IE_Pressed, this, &ACharacter::Jump);`
+
+- `APawn::AddControllerPitchInput(float)` 
+  - Look Up
+  - Does NOT account for framerate 
+
+- `APawn::AddControllerYawInput(float)` 
+  - Look left/right
+  - Does NOT account for framerate
+
+- `APawn::AddMovementInput(float)` 
+  - Sets the forward direction vector input
+  - DOES account for framerate
+
+## ACharacter : APawn
+
+  Characters are Pawns that have a humanoid mesh, collision, and built-in movement logic. They are responsible for all physical interaction between the player or AI and the world, and also implement basic networking and input models.
+
+  *They are designed for a vertically-oriented player representation that can walk, jump, fly, and swim* using [CharacterMovementComponent](#UCharacterMovementComponent).
+
+- [Documentation](https://docs.unrealengine.com/5.0/en-US/API/Runtime/Engine/GameFramework/ACharacter/)
+
+- Adds NavMesh movement
+
+#### Character Movement Functions:
+
+- `ACharacter::Jump(float)`
 
 
 ## Controllers
@@ -328,13 +356,6 @@ DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_FiveParams( FComponentHitSignature, UP
     PlayerInputComponent->BindAxis(TEXT("MoveForward"), this, &ATank::Move);
     ```
 
-### ACharacter : APawn
-
-  Characters are Pawns that have a humanoid mesh, collision, and built-in movement logic. 
-  They are responsible for all physical interaction between the player or AI and the world, and also implement basic networking and input models. 
-
-  *They are designed for a vertically-oriented player representation that can walk, jump, fly, and swim* using [CharacterMovementComponent](#UCharacterMovementComponent).
-
 ### TargetPoint
 
   - Point icon with no default behavior
@@ -345,11 +366,19 @@ DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_FiveParams( FComponentHitSignature, UP
 
 - Players' camera must be "activated"
 
+- Best done in Blueprint
+
 ### SpringArm
 
 - Controls camera w/r/t player or whatever
 
 - Set Camera Lag and Rotation on springarm to give sense of inertia to camera
+
+- "Use Pawn Control Rotation" automatically sets camera rotation to parent pawn
+
+- Camera should always look downl SpringArm
+
+- "Socket Offset" can offset spring arm origin so an offset camera will connect straight to player (ie over the shoulder). So that in Over the should set up, the spring arm (and camera) compresses toward the player, instead of straight ahead.
 
 ### CameraShake
 
@@ -467,7 +496,7 @@ DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_FiveParams( FComponentHitSignature, UP
 
 - Base class sufficient for Single Player
 
-- Sets player pawn class
+- Sets player spawn class for a level
 
 - Can override per-level in World Settings, or for entire game in Project Settings
 
