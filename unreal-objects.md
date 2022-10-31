@@ -246,7 +246,13 @@ DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_FiveParams( FComponentHitSignature, UP
 
 ### AActor
   
-  Base Class. Store transform information in RootComponent. Can be replaced with any `USceneComponent` (or derived class)
+  - Base Class. 
+
+  - Store transform information in RootComponent. 
+
+  - Can be replaced with any `USceneComponent` (or derived class)
+
+  - Actors don't have a hierarachy among themselves. Hierarchys are implemented through their components
 
 #### Actor Methods
 

@@ -41,6 +41,8 @@
 
 - **Sockets** used to attach meshes to skeletal meshes
 
+- **Tip:** Can hide mesh subcomponents by hiding the bone its attached to.
+
 ## Animation Blueprint
 
 - Controls the animation to a specific skeletal mesh. The skeleton is selected when the ABP is created
@@ -95,7 +97,7 @@ Generally speaking, to set and transition animations you can use blend or a stat
 
   - Match animation speed to global velocity to prevent sliding:
 
-    - 
+    - Can calculate foot speed of animation and then set the ranges on the BS graph
 
 ### StateMachine
 
