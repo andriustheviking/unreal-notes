@@ -203,8 +203,8 @@ DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_FiveParams( FComponentHitSignature, UP
 
 - `GetAllActorsOfClass(const UObject *WorldContextObject, TSubclassOf<AActor> ActorClass, TArray<AActor*> &OutActors)`
 
-- `SpawnEmitterAtLocation()`
-  - See [SpawnEmitterAtLocation](#SpawnEmitterAtLocation)
+- `SpawnEmitterAtLocation()` / `SpawnEmitterAttached()`
+  - See [SpawnEmitter](#SpawnEmitter)
 
 # Actors
 
@@ -273,6 +273,10 @@ DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_FiveParams( FComponentHitSignature, UP
     GetOwner()->OnTakeAnyDamage.AddDynamic(this, &UHealthComponent::DamageTaken);
   ```
 
+- `SetOwner()`
+  - Actors don't have hierarchy, instead have ownership.
+  - Mostly relevent for Damage and Multiplayer
+
 - `GetInstigatorController()` - Needed for `ApplyDamage`
 
 - `SetActorHiddenInGame(bool)` - hides actor
@@ -333,18 +337,24 @@ DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_FiveParams( FComponentHitSignature, UP
 
 - `ACharacter::Jump(float)`
 
-
 ## Controllers
 
   Controllers are non-physical Actors that can possess a **Pawn** (or derived class). By default, there is a one-to-one relationship between Controllers and Pawns; meaning, each Controller controls only one Pawn at any given time.
 
-  - Methods:
-    - `ControlRotation` sets the Pawn rotation
+#### Methods:
+
+- `ControlRotation` sets the Pawn rotation
+
+- `GetPlayerViewPoint()`  Returns Player's Point of View. 
+  - For the AI this means the Pawn's 'Eyes' ViewPoint
+  - For a Human player, this means the Camera's ViewPoint
 
 ### AI Controllers
   
   - AI Controllers are automatically created and assigned to non-player character blueprints manually placed in a level.
+
   - **Note:** By default, characters spawned at runtime have **autoposses OFF**. Can set to automatically have ON in BP Details
+  
   - AI Movement requires an [AI Navigation Mesh](./unreal-editor-notes.md#navigation-mesh)
 
 ### Player Controllers
@@ -355,6 +365,7 @@ DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_FiveParams( FComponentHitSignature, UP
 #### Player Controller Methods
 
   - `GetHitResultUnderCursor()` Gets the hit result under cursor, (i.e. top down ARPG)
+
   - `SetupPlayerInputComponent()` - binds player input to pawn.
     - Example:
     ```cpp
@@ -362,10 +373,9 @@ DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_FiveParams( FComponentHitSignature, UP
     PlayerInputComponent->BindAxis(TEXT("MoveForward"), this, &ATank::Move);
     ```
 
-### TargetPoint
+## TargetPoint
 
-  - Point icon with no default behavior
-
+  - An Actor with no default behavior
   - Useful as spawn points
 
 # Camera
@@ -434,8 +444,15 @@ DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_FiveParams( FComponentHitSignature, UP
 
   - No **Rendering** or **Collision**
 
-  - Methods
-    - `SetupAttachment()` - Accepts parent to attach to component. Generally intended to be called from its Owning Actor's constructor
+#### USceneComponent Methods
+
+  - `SetupAttachment()` 
+    - Accepts parent to attach to component. 
+    - Should only be called from its Owning Actor's constructor
+
+  - `AttachToComponent()`
+    - Callable at runtime
+    - Calling from Actor will use actor's root component
 
 ### UPrimitiveComponent : USceneComponent 
 
@@ -523,13 +540,17 @@ DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_FiveParams( FComponentHitSignature, UP
 - Can be assigned to a socket on a skeletal mesh
 - Can be Activated / Deactivated
 
-## SpawnEmitterAtLocation 
+## SpawnEmitter
+
+SpawnEmitterAtLocation / SpawnEmitterAttached
   
   - Spawns a **`UParticleSystem`**
   
   - Defaults to spawn one particle effect, but can spawn multiple
   
   - Fire and forget (crreation and deletion is handled)
+
+  - `SpawnEmitterAttached` can attach directly to socket
 
 ## UParticleSystem 
 
@@ -540,6 +561,8 @@ DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_FiveParams( FComponentHitSignature, UP
   - **Not a component.**
 
   - Created with `SpawnEmitterAtLocation`
+
+  - **Note:** Even though an emitter default is spawn once and destroy, if a Particle System is set to repeat, it may never end (i.e. a flame).
 
 ## UParticleSystemComponent
 
