@@ -131,7 +131,7 @@
 
 ### Project Settings:
 
-- Build:
+#### Build:
   
   - When using "Package Project" from the "File" menu in the Unreal editor, the editor will cook, stage and package **ALL CONTENT** in your game (whether it is used by the game or not). This can wind up making your packaged game much bigger than necessary. You can reduce what is cooked by using the `-map=` argument when running BuildCookRun.
   - `bCookAll` (DefaultGame.ini): if true, cook everything in the content directory. This means that if 
@@ -139,14 +139,23 @@
     end up in the cook.
   - `bCookMapsOnly` (DefaultGame.ini): **This setting only has any effect if bCookAll is set.** If it is true, "cook all" does not actually cook every asset, just all maps and the assets they reference.
 
-- Maps and Modes:
+#### Maps and Modes:
   
   - Set the default maps here
 
-- Input
+#### Input
   
   - Manages key bindings.
   - **Action** and **Axis** input events
+
+#### Collision
+
+  - Trace Channels
+    - When creating a new channel, make sure to go through **Presets** to set Trace type for the new channel as expected. (i.e. Do you want **Invisible Walls** to *block* or *ignore* channel?)
+    - Can find corresponding trace channel enum in `DefaultEngine.ini` Config file. Example:
+    ```
+    +DefaultChannelResponses=(Channel=ECC_GameTraceChannel1,DefaultResponse=ECR_Block,bTraceType=True,bStaticObject=False,Name="Bullet")
+    ```
 
 # Unreal Motion Graphics
 

@@ -26,6 +26,17 @@
 
 - *impure* just means not pure
 
+## virtual and override
+
+### `virtual`
+- Declaring a base method virtual signals to the compiler that calls should check for inherited class implementation. Otherwise base class calls to a child class object will call the base class implementation.
+
+### `override`
+- This signals to the compiler (and developer) that the method we're implementing is overriding a virtual method. 
+- Will not compile if there's no overridden method, or if overridden method is not virual
+
+**Note:** Make sure to consider when you want to call super methods or not
+
 # Useful Functions
 
 - `atan2` vs `atan` 

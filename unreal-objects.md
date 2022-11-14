@@ -11,6 +11,7 @@
   - [Precompiler Macros](#precompiler-macros)
   - [Logging](#logging)
   - [GameFramework Library Objects](#GameFramework-Library-Objects)
+  - [Damage](#damage)
 - [Kismet Library](#kismet-library)
 - [Actors](#actors)
   - [Spawning Actors](#spawn-actors)
@@ -148,6 +149,7 @@ DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_FiveParams( FComponentHitSignature, UP
 
 #### Parameters
 - `BlueprintCallable` - Exposes functions to BP Editor
+- `BlueprintPure` - often pared with `const` keyword on function
 - `BlueprintImplementableEvent` - Exposes the object call as an Event in BP Editor
   - Basically a delegate method for the BP Editor to implement, but callable in C++. 
   - Does NOT require implementation in `.cpp` file 
@@ -169,14 +171,22 @@ DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_FiveParams( FComponentHitSignature, UP
 ### Logging
 
 - `UE_LOG(Category, Level, TEXT("Some Text"))`
-  - [Documentation](https://docs.unrealengine.com/4.27/en-US/API/Runtime/Core/Logging/)
+  - [Unofficial Documentation](https://unrealcommunity.wiki/logging-lgpidy6i)
     - [Verbosity](https://docs.unrealengine.com/4.27/en-US/API/Runtime/Core/Logging/ELogVerbosity__Type/)
   - Level `Fatal` will log, then crash program
   - `ulog` - CAPTNCAPS shortcut
 
 ## GameFramework Library Objects
 
-### `UDamageType`
+## Damage
+
+Two primary event types:
+
+### FPointDamageEvent : FDamageEvent
+
+### FRadiaDamageEvent : FDamageEvent
+
+## `UDamageType`
 - `#include "GameFramework/DamageType.h"`
 - A DamageType is intended to define and describe a particular form of damage and to provide an avenue for customizing responses to damage from various sources.For example, a game could make a DamageType_Fire set it up to ignite the damaged actor. 
 - DamageTypes are never instanced and should be treated as immutable data holders with static code functionality. They should never be stateful.
@@ -475,7 +485,6 @@ DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_FiveParams( FComponentHitSignature, UP
     ```
       - Where `OnHit` is the callback we defined
 
-
 ### UCharacterMovementComponent
 
   - `#include "GameFramework/CharacterMovementComponent.h"`
@@ -628,11 +637,11 @@ Use `FTimerManager` and `FTimerHandle` to setup timer event scheduling. The FTim
 
 - **Note:** By default CharacterClasses ignores trace hits. To fix, change **Collision** of components you want to collide with from **Pawn** to **Custom**. Then change **Visibilty Trace** from **Ignore** to **Block** (or Overlap)
 
-- **LineTraceByChannel**
+### **LineTraceByChannel**
 
 - Return Bool is the same as OutHit.BlockingHit
 
-### Trace Channel
+#### Trace Channel
 
 - Groups traceability of objects and collision/overlap behaviors
 
@@ -641,6 +650,10 @@ Use `FTimerManager` and `FTimerHandle` to setup timer event scheduling. The FTim
 - Useful channel: `ECollisionChannel::ECC_Visibility`
 
 - Editor / c++ channel name mappings can be found in `[ProjectDirectory]/Config/DefaultEngine.ini`
+
+### LineTraceByObjectType
+
+- Less flexibility than by channel. 
 
 # Volume
 
