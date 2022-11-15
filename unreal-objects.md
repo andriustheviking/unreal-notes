@@ -341,8 +341,6 @@ Two primary event types:
 
 - [Documentation](https://docs.unrealengine.com/5.0/en-US/API/Runtime/Engine/GameFramework/ACharacter/)
 
-- Adds NavMesh movement
-
 #### Character Movement Functions:
 
 - `ACharacter::Jump(float)`
@@ -366,6 +364,18 @@ Two primary event types:
   - **Note:** By default, characters spawned at runtime have **autoposses OFF**. Can set to automatically have ON in BP Details
   
   - AI Movement requires an [AI Navigation Mesh](./unreal-editor-notes.md#navigation-mesh)
+
+#### NavMesh
+
+AI Requires a **NavMesh** to layout valid paths. These are created using **Nav Mesh Bounds Volume** in the editor. It's a volume that automatically calculates navigability of geometry within the volume.
+
+#### AI Controller Methods:
+
+- `SetFocus()` / `SetFocalPoint()`
+  - Sets what the AI is looking at. 
+  - Takes a priorty level `EAIFocusPriority` with three different levels 
+
+- `ClearFocus`
 
 ### Player Controllers
   
