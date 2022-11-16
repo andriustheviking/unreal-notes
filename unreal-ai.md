@@ -3,7 +3,10 @@
 ## Table of Contents
 
 - [AI Controllers](#ai-controllers)
-- [Nave Mes](#nav-mesh)
+- [Behavior Tree / Blackboard](#behavior-tree--blackboard)
+- [Nav Mesh](#nav-mesh)
+
+---
 
 # AI Controllers
 
@@ -25,6 +28,45 @@
 - `MoveToActor()` / `MoveToLocation()`
 
 - `LineOfSight()`
+
+### Using Behavior Tree and Blackboard
+
+- `RunBehaviorTree(UBehaviorTree)` - starts executing [behavior tree](#behavior-tree)
+
+- `UBlackboardComponent* GetBlackBoardComponet()` - gets the AI Controller's BB
+
+# Behavior Tree / Blackboard
+
+One way to implement AI is to use Unreal's BT/BB architecture.
+
+The Blackboard receives GameWorld information which the Blackboard consumes to drive behavior.
+
+## Behavior Tree
+
+- [Documentation](https://docs.unrealengine.com/5.1/en-US/behavior-trees-in-unreal-engine/)
+
+- A BT holds a reference to a BB object. *(This is assignable in BT details panel, and will even autofill)*
+
+- Can view BT of AIControllers live in Editor, selecting the specific controller via a dropdown.
+
+### `UBehaviorTree`
+
+## Blackboard
+
+[Documentation](https://docs.unrealengine.com/4.26/en-US/BlueprintAPI/AI/Components/Blackboard/)
+
+### `UBlackboardComponent`
+
+- Blackboards store values as a map, with SetValue GetValue methods:
+  - Generic typedef: `SetValue<T>(FName&, T)` and `T GetValue<T>(FName&)` 
+  - Utility Setter / Getters Examples:
+    - `UObject* GetValueAsObject(FName&)` / `SetValueAsObject(FName&, UObject*)` 
+    - `UClass* GetValueAsClass(FName&)` / `SetValueAsClass(FName&, UClass*)`
+    - Value Types 
+      - `bool GetValueAsBool(FName&)` / `SetValueAsBool(FName&, bool)` 
+      - etc..
+ 
+
 
 # Nav Mesh
 
