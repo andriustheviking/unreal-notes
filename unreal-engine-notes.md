@@ -217,21 +217,19 @@ You can use Animation Montages (Montages) to combine several Animation Sequences
 
 - Materials can be made from Textures
 
-- **Material Graph** sets and controls the properties of the material
-  
-        - Nodes connect via pins input/output to modify the material
-        - Result Node is the final material result
-        - Drag textures to the graph and connect them to the appropriate node property (result node, or other)    
+- **Material Graph** sets and controls the properties of the material  
+  - Nodes connect via pins input/output to modify the material
+  - Result Node is the final material result
+  - Drag textures to the graph and connect them to the appropriate node property (result node, or other)    
 
 - Materials contains Elements
-  
+
   - Useful basic elements:
-    
-        - **Base Color**: The color or texture of a surface. Used to add detail and color variations.
-        - **Metallic**: How “metal-like” a surface is. Generally, a pure metal will have the maximum Metallic value whereas fabric will have a value of zero.
-        - **Specular**: Controls the shininess of nonmetallic surfaces. For example, ceramic would have a high Specular value but clay would not.
-        - **Roughness**: A surface with maximum roughness will not have any shininess. It’s used for surfaces such as rock and wood.
-        - **Emissive**: glowiness
+    - **Base Color**: The color or texture of a surface. Used to add detail and color variations.
+    - **Metallic**: How “metal-like” a surface is. Generally, a pure metal will have the maximum Metallic value whereas fabric will have a value of zero.
+    - **Specular**: Controls the shininess of nonmetallic surfaces. For example, ceramic would have a high Specular value but clay would not.
+    - **Roughness**: A surface with maximum roughness will not have any shininess. It’s used for surfaces such as rock and wood.
+    - **Emissive**: glowiness
 
 ### DynamicMaterialInstance
 
