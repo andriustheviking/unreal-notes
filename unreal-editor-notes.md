@@ -8,6 +8,7 @@
 - [Viewport](#viewport)
   - [Viewport Settings](#viewport-settings)
   - [Brush Editing](#brush-editing)
+  - [Volumes](#volumes)
 - [Settings](#settings)
   - [General Settings](#general-settings)
   - [Project Settings](#project-settings)
@@ -30,16 +31,21 @@
 ## Blueprint Functions
 
 - **AddTimeline**
+  
   - Can create keyframes for a specific value over a given timeframe.
   - Has its own timeline editor (looks kind of like After Effects)
   - negative value with **Lerp** will push value past Lerp starting value
 
 - **AddMovementInput**
+  
   - Input speed controlled by [CharacterMovementComponent](./unreal-objects.md#UCharacterMovementComponent)
 
 - **Append** - Use to concatinate strings in BP Editor
+
 - **Interpolate** - Linear Interpolation
+
 - **Select** 
+  
   - Select an enum in BP Editor or for mapping values
   - Useful to map `bool` value to different text ouputs
 
@@ -70,7 +76,9 @@
 - **Engine Scalability Settings** changes the viewport rendering settings
 
 - Can filter viewport to see different attributes of level.
+
 - Useful Viewport filters:
+  
   - Lit (Default)
   - Unlit
   - Player Collision
@@ -91,6 +99,12 @@
 - "Subtractive" shape located in Brush Settings in Details Panel
 
 - "Create Static Mesh" will turn a selection of brush geo objects into a static mesh object. **Note: The last object selected will be used as the Center Reference***
+
+## Volumes
+
+### Nav Mesh Bounds Volume
+
+See [Nav Mesh Bounds Volume](./unreal-ai.md#nav-mesh)
 
 # Settings
 
@@ -132,27 +146,28 @@
 ### Project Settings:
 
 #### Build:
-  
-  - When using "Package Project" from the "File" menu in the Unreal editor, the editor will cook, stage and package **ALL CONTENT** in your game (whether it is used by the game or not). This can wind up making your packaged game much bigger than necessary. You can reduce what is cooked by using the `-map=` argument when running BuildCookRun.
-  - `bCookAll` (DefaultGame.ini): if true, cook everything in the content directory. This means that if 
-    you have an asset that is not referenced by any others, it will still 
-    end up in the cook.
-  - `bCookMapsOnly` (DefaultGame.ini): **This setting only has any effect if bCookAll is set.** If it is true, "cook all" does not actually cook every asset, just all maps and the assets they reference.
+
+- When using "Package Project" from the "File" menu in the Unreal editor, the editor will cook, stage and package **ALL CONTENT** in your game (whether it is used by the game or not). This can wind up making your packaged game much bigger than necessary. You can reduce what is cooked by using the `-map=` argument when running BuildCookRun.
+- `bCookAll` (DefaultGame.ini): if true, cook everything in the content directory. This means that if 
+  you have an asset that is not referenced by any others, it will still 
+  end up in the cook.
+- `bCookMapsOnly` (DefaultGame.ini): **This setting only has any effect if bCookAll is set.** If it is true, "cook all" does not actually cook every asset, just all maps and the assets they reference.
 
 #### Maps and Modes:
-  
-  - Set the default maps here
+
+- Set the default maps here
 
 #### Input
-  
-  - Manages key bindings.
-  - **Action** and **Axis** input events
+
+- Manages key bindings.
+- **Action** and **Axis** input events
 
 #### Collision
 
-  - Trace Channels
-    - When creating a new channel, make sure to go through **Presets** to set Trace type for the new channel as expected. (i.e. Do you want **Invisible Walls** to *block* or *ignore* channel?)
-    - Can find corresponding trace channel enum in `DefaultEngine.ini` Config file. Example:
+- Trace Channels
+  - When creating a new channel, make sure to go through **Presets** to set Trace type for the new channel as expected. (i.e. Do you want **Invisible Walls** to *block* or *ignore* channel?)
+  - Can find corresponding trace channel enum in `DefaultEngine.ini` Config file. Example:
+    
     ```
     +DefaultChannelResponses=(Channel=ECC_GameTraceChannel1,DefaultResponse=ECR_Block,bTraceType=True,bStaticObject=False,Name="Bullet")
     ```

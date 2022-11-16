@@ -6,13 +6,17 @@ Welcome to my live notes taken for learning Unreal Engine.
 
 ## [General C++ Notes](./cpp-notes.md)
 
+## [Unreal AI](./unreal-ai.md)
+
 ## [Unreal Editor Notes](./unreal-editor-notes.md)
+
 - [Blueprint](./unreal-editor-notes.md#blueprint)
 - [Viewport](./unreal-editor-notes.md#viewport)
 - [Settings](./unreal-editor-notes.md#settings)
 - [Unreal Motion Graphics](./unreal-editor-notes.md#unreal-motion-graphics)
 
 ## [Unreal Engine Notes](./unreal-engine-notes.md)
+
 - [AI](./unreal-engine-notes.md#ai)
 - [Animation](./unreal-engine-notes.md#animation)
 - [Light](./unreal-engine-notes.md#light)
@@ -22,6 +26,7 @@ Welcome to my live notes taken for learning Unreal Engine.
 - [Sounds](./unreal-engine-notes.md#sounds)
 
 ## [Unreal Functions and Objects](./unreal-objects.md)
+
 - [Unreal Library](./unreal-objects.md#unreal-library)
 - [Unreal Objects](./unreal-objects.md#unreal-objects)
 - [Kismet Library](./unreal-objects.md#kismet-library)
