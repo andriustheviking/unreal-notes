@@ -357,6 +357,8 @@ Two primary event types:
   - For the AI this means the Pawn's 'Eyes' ViewPoint
   - For a Human player, this means the Camera's ViewPoint
 
+- `GetPawn()` - returns the pawn controlled by the controller, either player pawn or ai-controlled
+
 ### AI Controllers
   
   See [AI Controllers](./unreal-ai.md#ai-controllers)

@@ -29,6 +29,8 @@
 
 - `LineOfSight()`
 
+- `UBlackboardComponent* GetBlackboardComponent()` - returns the [UBlackboardComponent](#ublackboardcomponent)
+
 ### Using Behavior Tree and Blackboard
 
 - `RunBehaviorTree(UBehaviorTree)` - starts executing [behavior tree](#behavior-tree)
@@ -49,6 +51,18 @@ The Blackboard receives GameWorld information which the Blackboard consumes to d
 
 - Can view BT of AIControllers live in Editor, selecting the specific controller via a dropdown.
 
+### Behavior Tree Graph
+
+- The BT graph has a root node that can only have one child node. From there we build the behavior tree.
+
+#### Behavior Tree Sequence
+
+- Sequences execute child nodes in numbered order
+
+#### Behavior Tree Task
+
+- A Task is a single action
+
 ### `UBehaviorTree`
 
 ## Blackboard
@@ -56,6 +70,8 @@ The Blackboard receives GameWorld information which the Blackboard consumes to d
 [Documentation](https://docs.unrealengine.com/4.26/en-US/BlueprintAPI/AI/Components/Blackboard/)
 
 ### `UBlackboardComponent`
+
+- `#include "BehaviorTree/BlackboardComponent.h"`
 
 - Blackboards store values as a map, with SetValue GetValue methods:
   - Generic typedef: `SetValue<T>(FName&, T)` and `T GetValue<T>(FName&)` 
@@ -65,8 +81,6 @@ The Blackboard receives GameWorld information which the Blackboard consumes to d
     - Value Types 
       - `bool GetValueAsBool(FName&)` / `SetValueAsBool(FName&, bool)` 
       - etc..
- 
-
 
 # Nav Mesh
 
