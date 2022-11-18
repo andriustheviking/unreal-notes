@@ -55,13 +55,26 @@ The Blackboard receives GameWorld information which the Blackboard consumes to d
 
 - The BT graph has a root node that can only have one child node. From there we build the behavior tree.
 
-#### Behavior Tree Sequence
+- Behavior Tree Nodes:
 
-- Sequences execute child nodes in numbered order
+  - **Selector**
+    - A Selector executed child node in order left to right until a child node "succeeds"
 
-#### Behavior Tree Task
+    - **Decorator** is a task that succeeds or fails
 
-- A Task is a single action
+      - **Blackboard** can check blackboard values to return success/failure
+        - **Flow Control**
+          - **Observer Aborts** - How to handle condition changing while active
+            - **None**
+            - **Self** - If condition becomes **false**, stop execution and reevaluates Selector
+            - **Lower Piority** - If condition becomes **true**, during another sequence, stop that sequence and execute this one.
+            - **Both** - Does both.
+
+  - **Sequence**
+    - Sequences execute all child nodes in order left to right
+
+  - **Task**
+    - A Task is a single action (ie Move To, Wait, ...)
 
 ### `UBehaviorTree`
 
@@ -81,6 +94,7 @@ The Blackboard receives GameWorld information which the Blackboard consumes to d
     - Value Types 
       - `bool GetValueAsBool(FName&)` / `SetValueAsBool(FName&, bool)` 
       - etc..
+    - `ClearValue(FName&)`
 
 # Nav Mesh
 
