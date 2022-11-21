@@ -38,6 +38,10 @@
 
 # Unreal Library
 
+## Creating a new Unreal C++ object
+
+To create a new Unreal C++ object that can be accessed in the editor, highlight the **"C++ Classes"** folder in the Content Directory, press **"+ Add"** > **"New C++ Class...**. Unreal will generate the header and implementation files, and hook it up in the project.
+
 ### Structs
 
 - `FName`
