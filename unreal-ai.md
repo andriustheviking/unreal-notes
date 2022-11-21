@@ -37,6 +37,8 @@
 
 - `UBlackboardComponent* GetBlackBoardComponet()` - gets the AI Controller's BB
 
+  - Must be called after `RunBehaviorTree()`  
+
 # Behavior Tree / Blackboard
 
 One way to implement AI is to use Unreal's BT/BB architecture.
@@ -57,32 +59,28 @@ The Blackboard receives GameWorld information which the Blackboard consumes to d
 
 - Behavior Tree Nodes:
 
-  - **Selector**
+  - **Selector Node**
     - A Selector executed child node in order left to right until a child node "succeeds"
-
     - **Decorator** is a task that succeeds or fails
-
       - **Blackboard** can check blackboard values to return success/failure
-
-        - **Observe Blackboard Value** - changing a value read by a task executing on tick will be reflected by the task. 
-
-        - **Flow Control:**
-
+        - **Observe Blackboard Value**
+          - Controls where changing a value read by a task executing on tick will be reflected by the task. 
+        - Flow Control:
           - **Observer Aborts** - How to handle condition changing while active
             - **None**
             - **Self** - If condition becomes **false**, stop execution and reevaluates Selector
             - **Lower Piority** - If condition becomes **true**, during another sequence, stop that sequence and execute this one.
             - **Both** - Does both.
 
-  - **Sequence**
+  - **Sequence Node**
     - Sequences execute all child nodes in order left to right
 
-  - **Task**
+  - **Task Node**
     - A Task is a single action (ie Move To, Wait, ...)
 
-### `UBehaviorTree`
+#### `UBehaviorTree`
 
-### `UBTTaskNode`
+#### `UBTTaskNode`
 
 - [Documentation](https://docs.unrealengine.com/4.26/en-US/API/Runtime/AIModule/BehaviorTree/UBTTaskNode/)
 
@@ -95,27 +93,20 @@ NodeName = TEXT("Clear Blackboard Value");
 - Subclass of the abstract class `BTNode`
 
 - Useful Virtual function callbacks:
-
   - The callbacks all return `EBTNodeResult` of type `Succeeded`, `Failed`, `Aborted`, `InProgress`
-
     - **Note:** Returning `InProgress` will force the owner to call `TickTask()` until either `Succeeded`, `Failed`, or `Aborted` is returned
-
   - `ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)`
     - Called on first tick
     - `OwnerComp` allows you to get access to tree, controller and pawn via object ownership
     - `NodeMemory` useful to effeciently store values
-
   - `AbortTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)` 
     - Called on Abort
-  
   - `TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)` 
     - Called on each tick after `ExecuteTask`, while executing
-  
   - `OnMessage(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, FName Message, int32 RequestID, bool bSuccess)` 
-  
   - `OnTaskFinished(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, EBTNodeResult::Type TaskResult)`
 
-### `UBTTask_BlackboardBase : UBTTaskNode`
+#### `UBTTask_BlackboardBase : UBTTaskNode`
 
 - [Documentation](https://docs.unrealengine.com/4.26/en-US/API/Runtime/AIModule/BehaviorTree/Tasks/UBTTask_BlackboardBase/)
 
