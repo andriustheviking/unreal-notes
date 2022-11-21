@@ -37,6 +37,24 @@
 
 **Note:** Make sure to consider when you want to call super methods or not
 
+## Abstract Class
+
+A class is made **abstract** by declaring at least one of its functions as `pure virtual` function. 
+
+Abstract classes cannot be used to instantiate objects and serves only as an *interface*.  Failure to override a pure virtual function in a derived class, then attempting to instantiate objects of that class, is a compilation error.
+
+A pure virtual function is specified by placing `= 0` in its declaration as follows:
+
+```
+class Box {
+   public:
+      // pure virtual function
+      virtual double getVolume() = 0;
+  private:
+      double length;      // Length of a box
+//...
+```
+
 # Useful Functions
 
 - `atan2` vs `atan` 
