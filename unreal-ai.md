@@ -92,6 +92,8 @@ NodeName = TEXT("Clear Blackboard Value");
 ```
 - Subclass of the abstract class `BTNode`
 
+- **NOTE:** Must implement constructor, and set `NodeName` to access in BlackBoard
+
 - Useful Virtual function callbacks:
   - The callbacks all return `EBTNodeResult` of type `Succeeded`, `Failed`, `Aborted`, `InProgress`
     - **Note:** Returning `InProgress` will force the owner to call `TickTask()` until either `Succeeded`, `Failed`, or `Aborted` is returned

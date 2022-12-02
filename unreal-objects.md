@@ -655,6 +655,19 @@ Use `FTimerManager` and `FTimerHandle` to setup timer event scheduling. The FTim
 
 - Less flexibility than by channel. 
 
+## FCollisionQueryParams
+
+Trace Params to provide more context to the trace
+
+```
+FCollisionQueryParams
+(
+    FName InTraceTag,             // Adds a tag name to the trace
+    bool bInTraceComplex = false, // Whether to trace against complex collision 
+    const AActor* InIgnoreActor   // Add an Actor to ignore.
+)
+```
+
 # Volume
 
 ### TriggerVolumeActor
