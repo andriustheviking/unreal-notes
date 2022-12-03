@@ -99,7 +99,7 @@ To create a new Unreal C++ object that can be accessed in the editor, highlight 
 
 ### Cast<T>
 
-Unreal implementation of `dynamic_cast` Returns a pointer of type T, or `nullptr`. Use `Cast<>` on Unreal Objects.
+Unreal implementation of `dynamic_cast` Returns a pointer of type T, or `nullptr`. Use `Cast<>` on all Unreal Objects.
 
 ### Multicast Delegate
 
@@ -339,6 +339,9 @@ Two primary event types:
   - Sets the forward direction vector input
   - DOES account for framerate
 
+- `APawn::DetachFromControllerPendingDestroy()`
+  - Call this function to detach safely pawn from its controller, knowing that we will be destroyed soon.
+
 ## ACharacter : APawn
 
   Characters are Pawns that have a humanoid mesh, collision, and built-in movement logic. They are responsible for all physical interaction between the player or AI and the world, and also implement basic networking and input models.
@@ -519,8 +522,10 @@ Two primary event types:
 ### OtherComponents
 
   - **[UCapsuleComponent](https://docs.unrealengine.com/5.0/en-US/API/Runtime/Engine/Components/UCapsuleComponent/) : USceneComponent**
+    - `#include "Components/CapsuleComponent.h"`
 
   - **[UStaticMeshComponent](https://docs.unrealengine.com/5.0/en-US/API/Runtime/Engine/Components/UStaticMeshComponent/) : USceneComponent**
+    - `#include "Components/StaticMeshComponent.h"`
 
 # GameMode
 
@@ -669,6 +674,10 @@ FCollisionQueryParams
     const AActor* InIgnoreActor   // Add an Actor to ignore.
 )
 ```
+
+- Methods:
+  - `AddIgnoredActor()` - can add multiple actors to ignore via method call.
+    - **Note:** Adding an Actor's owner won't immediately ignore the owned actor. Must add them individually.
 
 # Volume
 

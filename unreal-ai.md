@@ -57,26 +57,62 @@ The Blackboard receives GameWorld information which the Blackboard consumes to d
 
 - The BT graph has a root node that can only have one child node. From there we build the behavior tree.
 
-- Behavior Tree Nodes:
+#### Behavior Tree Nodes:
 
   - **Selector Node**
+
     - A Selector executed child node in order left to right until a child node "succeeds"
-    - **Decorator** is a task that succeeds or fails
-      - **Blackboard** can check blackboard values to return success/failure
-        - **Observe Blackboard Value**
-          - Controls where changing a value read by a task executing on tick will be reflected by the task. 
-        - Flow Control:
-          - **Observer Aborts** - How to handle condition changing while active
-            - **None**
-            - **Self** - If condition becomes **false**, stop execution and reevaluates Selector
-            - **Lower Piority** - If condition becomes **true**, during another sequence, stop that sequence and execute this one.
-            - **Both** - Does both.
 
   - **Sequence Node**
+
     - Sequences execute all child nodes in order left to right
 
   - **Task Node**
+
     - A Task is a single action (ie Move To, Wait, ...)
+
+#### BTService
+
+  - Code that gets executed on Tick with a Node. 
+
+  - Services can be more efficient if a node updates less frequently than Tick()
+
+  - **SetDefaultFocus** - A Default Service available in Behavior Tree that updates AI Focus
+
+  - Primary Delegate methods:
+    - `OnBecomeRelevant (from UBTAuxiliaryNode)`
+    - `OnCeaseRelevant (from UBTAuxiliaryNode)`
+    - `TickNode (from UBTAuxiliaryNode)`
+    - `OnSearchStart`
+
+  - `BTService_BlackboardBase` : `BTService`
+    - Provides access to BB keys
+
+  - `BTService_BehaviorTreeBase` : `BTService`
+
+#### Decorator
+
+  - Decorator is a task that succeeds or fails
+
+    - **Loop** - add looping behavior to a Selector or Sequense
+
+    - **Blackboard** can check blackboard values to return success/failure
+
+      - **Observe Blackboard Value**
+
+        - Controls where changing a value read by a task executing on tick will be reflected by the task. 
+
+      - Flow Control:
+
+        - **Observer Aborts** - How to handle condition changing while active
+
+          - **None**
+
+          - **Self** - If condition becomes **false**, stop execution and reevaluates Selector
+
+          - **Lower Piority** - If condition becomes **true**, during another sequence, stop that sequence and execute this one.
+
+          - **Both** - Does both.
 
 #### `UBehaviorTree`
 

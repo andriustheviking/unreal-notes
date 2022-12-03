@@ -207,6 +207,10 @@ You can use Animation Montages (Montages) to combine several Animation Sequences
 
 - **[FComponentHitSignature OnComponentHit](./unreal-objects.md#uprimitivecomponent-methods)**
 
+### CollisionParams
+
+See [`FCollisionQueryParams`](./unreal-objects.md#FCollisionQueryParams)
+
 # Material
 
 - Documentation
