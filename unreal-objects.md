@@ -89,8 +89,6 @@ To create a new Unreal C++ object that can be accessed in the editor, highlight 
 
 - Define a new Unreal C++ objects in the Editor, go to **Tools > New C++ Class**. Can be defined from any existing class.
 
-## Unreal Object Lifecycle
-
 ### TSubclassOf<T>
 
 - Generic `UClass` type that is a subclass of another Type. 
@@ -98,6 +96,10 @@ To create a new Unreal C++ object that can be accessed in the editor, highlight 
 - Useful to reference classes in C++ which were defined in the Editor. (i.e. Blueprints) 
 
 - Can use this to then call super methods or spawn BP objects
+
+### Cast<T>
+
+Unreal implementation of `dynamic_cast` Returns a pointer of type T, or `nullptr`. Use `Cast<>` on Unreal Objects.
 
 ### Multicast Delegate
 
