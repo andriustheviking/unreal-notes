@@ -97,9 +97,9 @@ To create a new Unreal C++ object that can be accessed in the editor, highlight 
 
 - Can use this to then call super methods or spawn BP objects
 
-### Cast<T>
+### T * Cast<T>
 
-Unreal implementation of `dynamic_cast` Returns a pointer of type T, or `nullptr`. Use `Cast<>` on all Unreal Objects.
+Unreal implementation of `dynamic_cast` Returns **a pointer of type T**, or `nullptr`. Use `Cast<>` on all Unreal Objects.
 
 ### Multicast Delegate
 
@@ -197,6 +197,14 @@ Two primary event types:
 - A DamageType is intended to define and describe a particular form of damage and to provide an avenue for customizing responses to damage from various sources.For example, a game could make a DamageType_Fire set it up to ignite the damaged actor. 
 - DamageTypes are never instanced and should be treated as immutable data holders with static code functionality. They should never be stateful.
 - Can use `::StaticClass()` to get `TSublclassOf<UDamageType>` to get the damage type received
+
+# EngineUtils
+
+`#include "EngineUtils.h"`
+
+## Functions
+
+- `TActorRange<T>(UWorld *)` - Returns all Actors in a world of a given type
 
 # Kismet Library
 
@@ -359,6 +367,8 @@ Two primary event types:
   Controllers are non-physical Actors that can possess a **Pawn** (or derived class). By default, there is a one-to-one relationship between Controllers and Pawns; meaning, each Controller controls only one Pawn at any given time.
 
 #### Methods:
+
+- `IsPlayerController()`
 
 - `ControlRotation` sets the Pawn rotation
 
