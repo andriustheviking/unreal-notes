@@ -8,9 +8,15 @@
 
 ## Unreal Design Tips
 
+### UI
+
+Generally UI should be implemented on the PlayerController. Especially true for multiplayer games.
+
 ### Character Death
 
 Detach Controller from Characters on Death, and disable collision (if necessary). 
+
+**Note:** Make sure to call `DetachFromControllerPendingDestroy` after any work is needed by the Player Controller. For example, we can't get the PlayerController from a Pawn if it's been detached!
 
 Example:
 	```

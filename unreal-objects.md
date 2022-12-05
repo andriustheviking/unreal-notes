@@ -368,16 +368,34 @@ Two primary event types:
 
 - `GetPawn()` - returns the pawn controlled by the controller, either player pawn or ai-controlled
 
+- `RestartLevel()`
+  - Note: Calling RestartLevel on the PlayerController may encounter a "Travel" error when playing from the editor. Can get around this by playing level as standalone game. 
+
+- AController Interface:
+```cpp
+  virtual void GameHasEnded(class AActor* EndGameFocus = nullptr, bool bIsWinner = false) override;
+  virtual bool IsLocalController() const override;
+  virtual void GetPlayerViewPoint(FVector& out_Location, FRotator& out_Rotation) const override;
+  virtual void SetInitialLocationAndRotation(const FVector& NewLocation, const FRotator& NewRotation) override;
+  virtual void ChangeState(FName NewState) override;
+  virtual class AActor* GetViewTarget() const override;
+  virtual void BeginInactiveState() override;
+  virtual void EndInactiveState() override;
+  virtual void FailedToSpawnPawn() override;
+  virtual void SetPawn(APawn* InPawn) override;
+```
+
 ### AI Controllers
   
   See [AI Controllers](./unreal-ai.md#ai-controllers)
 
-### Player Controllers
+### APlayerController
   
   - Accepts player input and issues commands to Player Pawn
   - **Autoposses Player** sets player pawn automatically at beginning of level
+  - Generally speaking, UI logic should be implemented on Player Controllers. 
 
-#### Player Controller Methods
+#### PlayerController Methods
 
   - `GetHitResultUnderCursor()` Gets the hit result under cursor, (i.e. top down ARPG)
 
@@ -387,6 +405,12 @@ Two primary event types:
     // This binds the Move Forward input axis (defined in Project Settings) to call ATank::Move on this
     PlayerInputComponent->BindAxis(TEXT("MoveForward"), this, &ATank::Move);
     ```
+
+  - `virtual GameHasEnded(AActor* EndGameFocus = nullptr, bIsWinner = false) override`
+
+  - `WidgetT* CreateWidget(OwnerT* OwningObject, TSubclassOf<UUserWidget> UserWidgetClass = WidgetT::StaticClass(), FName WidgetName = NAME_None)`
+    - Can instantiate Blueprint widget in C++ adding a `UPROPERTY TSubclassOf<UUserWidget>` and setting the BP_Widget we created to that property. Then call `CreateWidget(this, GameOverWidgetClass);`
+    - PlayerControllers are one of the few classes that can act as Widget Owners 
 
 ## TargetPoint
 
@@ -527,9 +551,30 @@ Two primary event types:
   - **[UStaticMeshComponent](https://docs.unrealengine.com/5.0/en-US/API/Runtime/Engine/Components/UStaticMeshComponent/) : USceneComponent**
     - `#include "Components/StaticMeshComponent.h"`
 
+# Widgets
+
+## UUserWidget
+
+- Widget Base class
+
+- **Note:** To Compile `UUserWidgets`, we need to add the **`UMG`** Module Dependency in `ProjectName.Build.cs` file. Example:
+``` cpp
+PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "GameplayTasks", "UMG" });
+```
+
+- PlayerControllers are good for managing Player UI
+
+- Widgets are instantiated with `CreateWidget()`
+
+- Once instantiated, made viewable with `AddToViewport()`
+
 # GameMode
 
 > “GameMode is a blueprint class that controls how a player enters the game. For example, in a multiplayer game, you would use Game Mode to determine where each player spawns. More importantly, the Game Mode determines which Pawn the player will use.”
+
+GameMode typically decides game rules and who won/lost.
+
+Can get GameMode from UWorld via `GetAuthGameMode<T>()`
 
 ### GameModeBase
 
@@ -696,6 +741,8 @@ FCollisionQueryParams
 - **WorldContextObject** - all instanced objects in a world can be a WorldContextObject, so can pass `this` from any instance to provide the World Context
 
 - **TimeSeconds** - in-game time, changes with pauses, game speed, etc...
+
+- `GetAuthGameMode<T>()` returns the world's gamemode as type T
 
 ### UWorld::GetWorld
 

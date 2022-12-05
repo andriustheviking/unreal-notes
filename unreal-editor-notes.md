@@ -205,3 +205,7 @@ See [Nav Mesh Bounds Volume](./unreal-ai.md#nav-mesh)
 - **Bind** 
   
   - Links component properties to widget variables
+
+### UUserWidget
+
+- Can instantiate widget in C++ (in PlayerController) adding a `UPROPERTY TSubclassOf<UUserWidget>` and setting the BP_Widget we created to that property. Then in the PlayerController.cpp, we create and manage it.  
