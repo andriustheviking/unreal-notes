@@ -174,7 +174,7 @@ See [Nav Mesh Bounds Volume](./unreal-ai.md#nav-mesh)
 
 # Unreal Motion Graphics
 
-### Widgets
+## Widgets
 
 - **Tip:** `RemoveFromParent` on `self` from the Widget's Event Graph will remove the widget instance from the scene entirely.
 
@@ -206,6 +206,12 @@ See [Nav Mesh Bounds Volume](./unreal-ai.md#nav-mesh)
   
   - Links component properties to widget variables
 
-### UUserWidget
+## UUserWidget
 
 - Can instantiate widget in C++ (in PlayerController) adding a `UPROPERTY TSubclassOf<UUserWidget>` and setting the BP_Widget we created to that property. Then in the PlayerController.cpp, we create and manage it.  
+
+## Widget Palette
+
+  - Text
+  
+    - "Size To Content" keeps the bounding box to the size of the text content.

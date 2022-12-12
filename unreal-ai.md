@@ -21,7 +21,10 @@
 - `SetFocus()` / `SetFocalPoint()`
   
   - Sets what the AI is looking at. 
+
   - Takes a priorty level `EAIFocusPriority` with three different levels 
+
+  - **Note:** SetFocus will only update a Pawn's `ControlRotation` if the target object is a `APawn`. So if we're trying to use ControlRotation to drive aim pitch this will be affected
 
 - `ClearFocus`
 
@@ -171,6 +174,8 @@ NodeName = TEXT("Clear Blackboard Value");
     - `ClearValue(FName&)`
 
 # Nav Mesh
+
+See Also [Nav Mesh](./unreal-engine-notes.md#navigation-mesh)
 
 AI Requires a **NavMesh** to layout valid paths. These are created using **Nav Mesh Bounds Volume** in the editor. It's a volume that automatically calculates navigability of geometry within the volume. **Tip:** Show > Navigation will highlight navigable area as green.
 

@@ -6,6 +6,8 @@ Welcome to my live notes taken for learning Unreal Engine.
 
 ## [C++ Notes](./cpp-notes.md)
 
+## [Unreal Animation](./unreal-animation.md)
+
 ## [Unreal AI](./unreal-ai.md)
 
 ## [Unreal Editor Notes](./unreal-editor-notes.md)
@@ -17,7 +19,6 @@ Welcome to my live notes taken for learning Unreal Engine.
 
 ## [Unreal Engine Notes](./unreal-engine-notes.md)
 
-- [Animation](./unreal-engine-notes.md#animation)
 - [Light](./unreal-engine-notes.md#light)
 - [Physics](./unreal-engine-notes.md#physics)
 - [Material](./unreal-engine-notes.md#material)

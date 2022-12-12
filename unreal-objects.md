@@ -31,7 +31,7 @@
 - [Sound](#sound)
 - [Timer](#timer)
 - [Trace](#trace)
-- [Volume](#volume)
+- [Volumes](#volumes)
 - [World](#uworld)
 
 ---
@@ -162,6 +162,8 @@ DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_FiveParams( FComponentHitSignature, UP
   - **Can't be private**
 
 ### UPROPERTY()
+
+Always include for object properties on Unreal classes. Super important for correct object lifecycle in game engine. 
 
 #### Parameters
 - `Category="foobar"` - puts the variable in a category name 
@@ -655,6 +657,14 @@ SpawnEmitterAtLocation / SpawnEmitterAttached
 
   - See also [Sounds](./unreal-engine-notes.md#sounds)
 
+  - `#include "Kismet/GameplayStatics.h"`
+
+    - `PlaySoundAtLocation()`
+
+    - `SpawnSoundAtLocation()`
+
+    - `SpawnSoundAttached()`
+
 ### USoundBase
 
   - Sound base class
@@ -734,7 +744,7 @@ FCollisionQueryParams
   - `AddIgnoredActor()` - can add multiple actors to ignore via method call.
     - **Note:** Adding an Actor's owner won't immediately ignore the owned actor. Must add them individually.
 
-# Volume
+# Volumes
 
 ### TriggerVolumeActor
 
