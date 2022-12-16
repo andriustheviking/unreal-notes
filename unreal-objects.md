@@ -26,7 +26,7 @@
 - [GameMode](#gamemode)
   - [GameModeBase](#gamemodebase)
   - [GameMode](#gamemode--gamemodebase)
-- [Level](#level)
+- [Map](#map)
 - [Particles](#particles)
 - [Sound](#sound)
 - [Timer](#timer)
@@ -604,9 +604,9 @@ Can get GameMode from UWorld via `GetAuthGameMode<T>()`
 
 - Child class, includes **Match State** and **Multiplayer Matches**
 
-# Level
+# Map
 
-> Levels contain other Actors and provide the environment for your game's players.
+> Maps (aka Levels) contain other Actors and provide the environment for your game's players.
 
 # Particles
 

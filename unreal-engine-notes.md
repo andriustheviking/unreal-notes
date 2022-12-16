@@ -2,6 +2,7 @@
 
 ## Table of Contents
 
+- [Overview](#unreal-overview)
 - [AI](#ai)
 - [Animation](#animation)
 - [Light](#light)
@@ -12,6 +13,16 @@
 - [Material](#material)
 - [Particles](#particles)
 - [Sound](#sound)
+
+# Unreal Overview
+
+### Play start order of operations:
+
+1. Unreal Loads [Map](./unreal-objects.md#map)
+2. **Map** specifies a [GameMode](./unreal-objects.md#gamemode)
+3. [PlayerController](./unreal-objects.md#aplayercontroller) joins the **Map**
+4. **PlayerController** asks **GameMode** to spawn a [Pawn](./unreal-objects.md#apawn--aactor)
+5. The **Pawn** is linked to the **PlayerController**
 
 # AI
 
