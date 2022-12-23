@@ -5,9 +5,9 @@
 - In Editor Play Modes, can select number of players and Net Mode.
 
 - **Net Modes**
-	- Standalone
-	- Play as Listen Server
-	- Play as Client
+  - Standalone
+  - Play as Listen Server
+  - Play as Client
 
 # CLI
 
@@ -17,7 +17,7 @@
 
 - To find the server listening port, search for "listening on port" 
 
-## Windows Command Prompt
+### Windows Command Prompt
 
 Server Launch Example:
 ```
@@ -28,7 +28,7 @@ Client Launch Example:
 ```
 "C:\Program Files\Epic Games\UE_5.0\Engine\Binaries\Win64\UnrealEditor-Cmd.exe" "C:\Users\andri\Workspace\UnrealTutorials\Multiplayer\Multiplayer01\Multiplayer01.uproject" <Server IP/LAN Address>:<Optional Port> -game -log -ResX=1280 -ResY=720 -WINDOWED
 ```
-## URL
+### URL
 
 - Passing a URL is optional, but must immediately follow the executable name or any mode switch if one is present.
 
@@ -37,7 +37,7 @@ Client Launch Example:
 - To Load specific map, add the following argument: `/Game/<Path from Content to Maps>/<Map Name>`
   - Example: `/Game/ThirdPerson/Maps/ThirdPersonMap`
 
-## CLI Arguments:
+### CLI Arguments:
 
 - `-log` enables logging
 
@@ -46,9 +46,9 @@ Client Launch Example:
 - `-game` Launch the game using uncooked content.
 
 - Example:
-	- Launch in windowed mode add `-ResX=1280 -ResY=720 -WINDOWED` to the cli
+  - Launch in windowed mode add `-ResX=1280 -ResY=720 -WINDOWED` to the cli
 
-## Options:
+### Options:
 
 The additional options are specified by appending them to the map name or server IP address. **Each option is prefaced by a '?', and can set a value with '='. Starting an option with '-' will remove that option from the cached URL options.**
 
@@ -58,13 +58,13 @@ The additional options are specified by appending them to the map name or server
 
 - Server Options:
 
-	- `listen` Specifes the server as a listen server.
+  - `listen` Specifes the server as a listen server.
 
-	- `bIsLanMatch` Sets whether multiplayer game is on the local network (e.g. bIsLanMatch=0).
+  - `bIsLanMatch` Sets whether multiplayer game is on the local network (e.g. bIsLanMatch=0).
 
-	- `bIsFromInvite` Specifies that the player joining was invited.
+  - `bIsFromInvite` Specifies that the player joining was invited.
 
-	- `spectatoronly` Starts the game in spectator mode.
+  - `spectatoronly` Starts the game in spectator mode.
 
 # Authority
 
@@ -86,17 +86,17 @@ Before UE 5 this was done in `BeginPlay()`:
 ```
 void AMovingPlatform::BeginPlay()
 {
-	Super::BeginPlay();						// Always call Super on overriden methods!
-	if (HasAuthority()) {					// Can only replicate from server
-		SetReplicates(true);				// Tells game this is replicated to client
-		SetReplicateMovement(true);	// Tells WHAT to replicate to client
-	}
+  Super::BeginPlay();            // Always call Super on overriden methods!
+  if (HasAuthority()) {          // Can only replicate from server
+    SetReplicates(true);        // Tells game this is replicated to client
+    SetReplicateMovement(true);  // Tells WHAT to replicate to client
+  }
 }
 ```
 
 UE 5+ we can set this in the constructor, and don't have to check Authority
 ```
-	// The new way, inc constructor
+  // The new way, inc constructor
   bReplicates = true;
-	SetReplicatingMovement(true);
+  SetReplicatingMovement(true);
 ```
