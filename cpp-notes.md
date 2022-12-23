@@ -15,6 +15,11 @@
 
 # Miscellaneous
 
+## Function Declaration:
+
+`void foo()` *Obsolete* Means "a function foo taking an unspecified number of arguments of unspecified type". 
+`void foo(void)` Means "a function foo taking no arguments"
+
 ## Pointer vs References
 
 - Reference cannot be reassigned

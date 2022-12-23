@@ -280,7 +280,13 @@ Two primary event types:
 
   - Actors don't have a hierarachy among themselves. Hierarchys are implemented through their components
 
+#### Initialization
+
+ To update on tick, set `PrimaryActorTick.bCanEverTick = true;`
+
 #### Actor Methods
+
+- `virtual void Tick(float DeltaSeconds) override` 
 
 - `AddActorLocalOffset` 
   - Adds a delta to the location of this component in its local reference frame.
@@ -308,6 +314,8 @@ Two primary event types:
 - `SetActorHiddenInGame(bool)` - hides actor
 
 - `SetActorTickEnabled(bool)` - enables/disables tick call
+
+- `SetMobility(EComponentMobility::Type)` - Sets actor movement/mobility. All Actor base classes are Static by default (not moveable).
 
 ## APawn : AActor
 
@@ -584,7 +592,7 @@ PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engi
 
 > “GameMode is a blueprint class that controls how a player enters the game. For example, in a multiplayer game, you would use Game Mode to determine where each player spawns. More importantly, the Game Mode determines which Pawn the player will use.”
 
-GameMode typically decides game rules and who won/lost.
+GameMode typically decides game rules and who won/lost. ie Decides where to spawn Pawns.
 
 Can get GameMode from UWorld via `GetAuthGameMode<T>()`
 
