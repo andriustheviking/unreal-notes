@@ -23,6 +23,7 @@
 - [Components](#components)
   - [Component Base Classes](#component-base-classes)
   - [UCharacterMovementComponent](#UCharacterMovementComponent)
+-[GameInstance](#gameinstance)
 - [GameMode](#gamemode)
   - [GameModeBase](#gamemodebase)
   - [GameMode](#gamemode--gamemodebase)
@@ -38,6 +39,20 @@
 
 # Unreal Library
 
+## Helpful Tips
+- `UPROPERTY(Meta =(MakeEditWidget = true))` 
+  - Adds a widget to the viewport so we don't have to use a USceneComponent.
+  - Very handy with FVector properties.
+  - **NOTE** the underlying FVector will be object-relative, not world-relative! So (0,0,0) is centered on the object.
+
+## Asserts
+
+[Documentation](https://docs.unrealengine.com/4.26/en-US/ProgrammingAndScripting/ProgrammingWithCPP/Assertions/)
+
+ - `ensure(Expression)`
+  - Notifies the crash reporter on the first time Expression is false. (Very noticible in logs!)
+  - Example: ```if (!ensure(TriggerVolume != nullptr)) return;```
+
 ## Creating a new Unreal C++ object
 
 To create a new Unreal C++ object that can be accessed in the editor, highlight the **"C++ Classes"** folder in the Content Directory, press **"+ Add"** > **"New C++ Class...**. Unreal will generate the header and implementation files, and hook it up in the project.
@@ -51,6 +66,7 @@ To create a new Unreal C++ object that can be accessed in the editor, highlight 
 
  - `FString`
   - If passing to `%s` token, need to dereference with `*` operator 
+  - To create a dynamic FString use `FString::Printf`. Example: `FString::Printf(TEXT("Joining %s"), *Address))`. where Address is type `const FString&`.
 
 ### Functions
 
@@ -69,12 +85,24 @@ To create a new Unreal C++ object that can be accessed in the editor, highlight 
 
 ### Structs
 
-- `TVector` 
+- `FTransform`
+  - [Documentation](https://docs.unrealengine.com/4.26/en-US/API/Runtime/Core/Math/FTransform/)
+  - Transform composed of Scale, Rotation (as a quaternion), and Translation. 
+  - Transformation of **position** vectors is applied in the order: Scale -> Rotate -> Translate. 
+  - Transformation of **direction** vectors is applied in the order: Scale -> Rotate. 
+  - Example:
+  ```
+    StartLocation = GetActorLocation();
+    EndLocation = GetTransform().TransformPosition(ObjectRelativeVector);
+    MoveVector = (EndLocation - StartLocation) / MoveSpeedSeconds;
+  ```
+
+- `FVector` 
   - Vector type_def, can be 2, 3, 4 dimensional
   - FVector (float), also can be int32 typed
   - `GetSafeNormal` - Returns the normalized vector (aka amplitude of 1)
 
-- `TRotator`
+- `FRotator`
   - Similar to 3 dimensional TVector, but with rotation
 
 - `FQuat` - Quaternion (aka Hamiltonion), like a 3D rotator but additional dimension prevents gimbal lock
@@ -132,7 +160,7 @@ DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_FiveParams( FComponentHitSignature, UP
   - The created object then becomes the default object for the property when its object class is instantiated
 
 - `NewObject<T>`
-  - Function normally used to instansiate object after engine initialization, like during noraml gameplay.
+  - Function normally used to instantiate object after engine initialization, like during normal gameplay.
   - Provides several convenience overloads to handle most scenarios.
 
 - `UWorld::SpawnActor<T>`
@@ -154,6 +182,8 @@ DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_FiveParams( FComponentHitSignature, UP
 ### UFUNCTION()
 
 #### Parameters
+- `Exec` - Function can be callable from game console
+  - Compatibale with **PlayerControllers** (and their associated **Pawns**), **HUDS**, **CheatManagers**, **GameModes**, **GameInstances**
 - `BlueprintCallable` - Exposes functions to BP Editor
 - `BlueprintPure` - often pared with `const` keyword on function
 - `BlueprintImplementableEvent` - Exposes the object call as an Event in BP Editor
@@ -175,6 +205,7 @@ Always include for object properties on Unreal classes. Super important for corr
 - `BlueprintReadOnly` - only exposes get
 - `meta=()` - additional properties
   - `AllowPrivateAccess` = “true” use to expose private variable to blueprint
+  - `Meta =(MakeEditWidget = true)` adds a widget to the viewport so we don't have to use a USceneComponent. **NOTE:** the underlying FVector will be object-relative, not world-relative! So (0,0,0) is centered on the object.
 
 ### Logging
 
@@ -368,6 +399,8 @@ Two primary event types:
 
 - [Documentation](https://docs.unrealengine.com/5.0/en-US/API/Runtime/Engine/GameFramework/ACharacter/)
 
+- The **CharacterMovementComponent** includes useful properties such as Mass, Crouched Half Height, Max Step Heigh, Max Walk Speed, AirControl, etc...
+
 #### Character Movement Functions:
 
 - `ACharacter::Jump(float)`
@@ -416,6 +449,8 @@ Two primary event types:
   - Generally speaking, UI logic should be implemented on Player Controllers. 
 
 #### PlayerController Methods
+
+  - `GetFirstLocalPlayerController()` Conveniently get the local PC
 
   - `GetHitResultUnderCursor()` Gets the hit result under cursor, (i.e. top down ARPG)
 
@@ -508,6 +543,12 @@ Two primary event types:
   - `SetupAttachment()` 
     - Accepts parent to attach to component. 
     - Should only be called from its Owning Actor's constructor
+    - Example:
+```
+  // In Constructor...
+  ProjectileSpawnPoint = CreateDefaultSubobject<USceneComponent>(TEXT("Projectile Spawn Point"));
+  ProjectileSpawnPoint->SetupAttachment(RootComponent);
+```
 
   - `AttachToComponent()`
     - Callable at runtime
@@ -521,7 +562,9 @@ Two primary event types:
 
   - Used to be rendered or used with collision data
 
-#### UPrimitiveComponent Methods
+#### UPrimitiveComponent Multicast Delegate Methods
+
+  For registering delegates see [Multicast Delegate](#multicast-delegate).
 
   - `FComponentHitSignature OnComponentHit`
     - **[Multicast Delegate](#multicast-delegate)** *(callback must be a `UFUNCTION()`)*
@@ -533,6 +576,12 @@ Two primary event types:
       BaseMeshComponent->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);
     ```
       - Where `OnHit` is the callback we defined
+
+  - `FComponentBeginOverlapSignature OnComponentBeginOverlap`
+    - **Note:** Must have `GetGenerateOverlapEvents()` set to true to generate overlap events.
+
+  - `FComponentEndOverlapSignature OnComponentEndOverlap`  
+    - **Note:** Must have `GetGenerateOverlapEvents()` set to true to generate overlap events.
 
 ### UCharacterMovementComponent
 
@@ -587,6 +636,26 @@ PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engi
 - Widgets are instantiated with `CreateWidget()`
 
 - Once instantiated, made viewable with `AddToViewport()`
+
+# GameInstance
+
+> High-level manager object for an instance of the running game. Spawned at game creation and not destroyed until game instance is shut down. Running as a standalone game, there will be one of these. Running in PIE (play-in-editor) will generate one of these per PIE instance.
+
+- [Documentation](https://docs.unrealengine.com/5.1/en-US/API/Runtime/Engine/Engine/UGameInstance/)
+
+- `#include "Engine/GameInstance.h"`
+
+- Set the game instance in the project settings
+
+## GameInstance Methods
+
+- `virtual void Init()` 
+  - Virtual function to allow custom GameInstances an opportunity to set up what it needs
+  - Init for a player when their game starts. 
+
+- `GetEngine()`
+  - Returns the engine instance, from which we can call utility functions like `AddOnScreenDebugMessage()`
+  - **Note:** This *can* return nullptr, so don't forget to check.
 
 # GameMode
 
