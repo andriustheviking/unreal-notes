@@ -1,0 +1,138 @@
+# Unreal UI
+
+## Table of Contents
+
+- [Widgets](#widgets)
+
+---
+
+# Widgets
+
+- **Tip:** `RemoveFromParent` on `self` from the Widget's Event Graph will remove the widget instance from the scene entirely.
+
+- Widget Editer has two parts:
+  
+  - **Designer** - visual canvas to design widget
+  
+  - **Event Graph** - Blueprint event graph
+
+## Widget Components
+
+- Widgets are made of Widget Components, like text, boxes, images, etc
+
+- **Is Variable** option in the Designer window exposes a widget component in the event graph
+
+- **Bind** 
+    - Links component properties to widget variables
+
+### Anchor
+  
+  - Used to maintain component position.
+  
+  - **Tip:** Set the anchor point for widget components to their nearest corner or screen center
+
+  - Anchors can be a point or region with min and max values. Ths changes the point *Position* values to *Offset* values in the *Details*. This will make the scale/size of the box in the offset relative to the offset distance to the canvas corners.
+
+### Slots
+
+Widgets can have a number of slots. A Canvas is a container with infinite slots. The Button is a container with one slot.
+
+# Panels
+
+## Canvas Panel
+  
+  - The base canvas for a multi-part widget
+  
+  - Add it by dragging to the widget hierarchy
+
+## Horizontal/Vertical Box
+
+There are **Vertical** and **Horizontal** box Panels. These operate similar to iOS UICollectionViews.
+
+These lay out thier child components in slot order.
+
+## Size Box
+
+Enforces size limits for its child slot.
+
+Can also use as empty spacers, and can automatically *Fill* inside a Horizontal/Vert Box to dynamically and evenly space.
+
+## Scale Box
+
+## Overlay
+
+Acts as a kind of sub canvas, but enforces overlap order by the slot order, where bottom-most slot is front-most visually.
+
+# UUserWidget
+
+- [Documentation](https://docs.unrealengine.com/5.1/en-US/API/Runtime/UMG/Blueprint/UUserWidget/)
+
+- `#include "Blueprint/UserWidget.h`
+
+- Widget Base class
+
+### Creating a Widget
+
+Widget Constructor:
+```cpp
+template<typename WidgetT, typename OwnerT>
+WidgetT * CreateWidget
+(
+  OwnerT * OwningObject,
+  TSubclassOf< UUserWidget > UserWidgetClass,
+  FName WidgetName
+) 
+```
+
+- **Note:** To Compile `UUserWidgets`, we need to add the **`UMG`** Module Dependency in `Source/<ProjectName>/ProjectName.Build.cs` file. Example:
+``` cpp
+PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "GameplayTasks", "UMG" });
+```
+
+- Can instantiate widget in C++ (in PlayerController) adding a `UPROPERTY TSubclassOf<UUserWidget>` and setting the BP_Widget we created to that property. Then in the PlayerController.cpp, we create and manage it.  
+
+- PlayerControllers are good for managing Player UI
+
+- Widgets are instantiated with `CreateWidget()`
+
+- Once instantiated, made viewable with `AddToViewport()`
+
+### TSharedRef<SWidget> TakeWidget()
+
+Returns the underlying slate widget or constructs it if it doesn't exist.  If you're looking to replace what slate widget gets constructed look for `RebuildWidget`.
+
+### Adding to Viewport
+
+`AddToViewport(int32 ZOrder)` Method adds widget to viewport
+
+Example:
+```cpp
+  UUserWidget* MenuWidget = CreateWidget<UUserWidget, UPuzzlePlatformGameInstance>(this, MenuWidgetClass, TEXT("MenuWidget"));
+```
+
+*NOTE: to interact with Widget, must have `bIsFocusable` set to true*
+
+#### PlayerController
+
+  - [PlayerController Documentation](https://docs.unrealengine.com/5.1/en-US/API/Runtime/Engine/GameFramework/APlayerController/)
+
+  - `SetInputMode(FInputModeDataBase&)` - sets up input mode on Player Controller.
+    - Requires `FInputModeDataBase` struct
+  
+  - `bShowMouseCursor`
+
+  - `WidgetT* CreateWidget(OwnerT* OwningObject, TSubclassOf<UUserWidget> UserWidgetClass = WidgetT::StaticClass(), FName WidgetName = NAME_None)`
+    - Can instantiate Blueprint widget in C++ adding a `UPROPERTY TSubclassOf<UUserWidget>` and setting the BP_Widget we created to that property. Then call `CreateWidget(this, GameOverWidgetClass);`
+    - PlayerControllers are one of the few classes that can act as Widget Owners 
+
+#### FInputModeDataBase
+
+- `SetWidgetToFocus(SWidget)` sets the focus of the input mode 
+
+- `SetLockMouseToViewportBehavior(EMousLockMode)`
+
+## Widget Palette
+
+  - Text
+  
+    - "Size To Content" keeps the bounding box to the size of the text content.

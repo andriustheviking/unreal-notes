@@ -154,20 +154,46 @@ DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_FiveParams( FComponentHitSignature, UP
 
 ### Constructors
 
+- `ConstructionHelpers::FClassFinder<T>`
+
+  - `#include "UObject/ConstructorHelpers.h"`
+  - Can use to declare a BP class type by referencing the BP file, where T is the parent class of the BP class.
+  - Call from inside constructor 
+  - `FClassFinder.Class` Property returns that Class object
+  - Example:
+  ```cpp
+  // In a class's constructor...
+  // Initialize a class finder
+  ConstructorHelpers::FClassFinder<UUserWidget> MenuWidgetClassFinder(TEXT("/Game/MenuSystem/WBP_MainMenu"));
+
+  if (MenuWidgetClassFinder.Class == nullptr) { /*log and return*/ }
+
+  // Access/Store the class reference with .Class property
+  TSubclassOf<UUserWidget> MenuWidgetClass = MenuWidgetClassFinder.Class;
+
+  // Tada! We now have a class type of a BP in C++.
+  UE_LOG(LogTemp, Warning, TEXT("Found class %s"), *MenuWidgetClass->GetName());
+  ```
+
+
 - `UObject::CreateDefaultSubobject` 
+
   - Is only callable in a class constructor. 
   - It takes care of creating an instance of the CDO of the subobject's class, setting its outer class as the caller object, among other things. 
   - The created object then becomes the default object for the property when its object class is instantiated
 
 - `NewObject<T>`
+
   - Function normally used to instantiate object after engine initialization, like during normal gameplay.
   - Provides several convenience overloads to handle most scenarios.
 
 - `UWorld::SpawnActor<T>`
+
   - Convenience method to spawn actors in a level with specified location, rotation, spawn collision settings, and checks to ensure it's a spawnable actor class.
   - Is just a convenience wrapper of `NewObject<AActor>`
 
 - `ConstructObject` \[Deprecated\]
+
   - Use `NewObject<T>` instead
 
 - [stackoverflow reference](https://stackoverflow.com/questions/60021804/unreal-engine-4-different-ways-to-instantiate-the-object)
@@ -444,11 +470,17 @@ Two primary event types:
 
 ### APlayerController
   
+  - [Documentation](https://docs.unrealengine.com/5.1/en-US/API/Runtime/Engine/GameFramework/APlayerController/)
   - Accepts player input and issues commands to Player Pawn
   - **Autoposses Player** sets player pawn automatically at beginning of level
-  - Generally speaking, UI logic should be implemented on Player Controllers. 
+  - Generally speaking, UI logic should be implemented on Player Controllers.
+  - User the PC to set the input mode (ie mouse for menus)
 
 #### PlayerController Methods
+
+  - `bShowMouseCursor`
+
+  - `SetInputMode(FInputModeDataBase&)` - sets up input mode
 
   - `GetFirstLocalPlayerController()` Conveniently get the local PC
 
@@ -622,20 +654,7 @@ Two primary event types:
 
 # Widgets
 
-## UUserWidget
-
-- Widget Base class
-
-- **Note:** To Compile `UUserWidgets`, we need to add the **`UMG`** Module Dependency in `ProjectName.Build.cs` file. Example:
-``` cpp
-PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "GameplayTasks", "UMG" });
-```
-
-- PlayerControllers are good for managing Player UI
-
-- Widgets are instantiated with `CreateWidget()`
-
-- Once instantiated, made viewable with `AddToViewport()`
+See [Unreal UI](./unreal-ui.md)
 
 # GameInstance
 
