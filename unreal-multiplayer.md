@@ -1,10 +1,14 @@
 # Unreal Multiplayer
 
+# Resources
+
+[The UE4 Network Compendium](https://assets.teachablecdn.com/pdf_viewer/web/viewer.html?file=https://www.filepicker.io/api/file/b6AoRVWRphvDRp8QZ4jA)
+
 # Play Modes
 
 - In Editor Play Modes, can select number of players and Net Mode.
 
-- **Net Modes**
+- **Net Modes:**
   - Standalone
   - Play as Listen Server
   - Play as Client
@@ -70,7 +74,7 @@ The additional options are specified by appending them to the map name or server
 
 Only the server "Has Authority"
 
-## bool HasAuthority() 
+### bool HasAuthority() 
 
 Returns authority status of UObject. `true` = is server
 
@@ -99,4 +103,56 @@ UE 5+ we can set this in the constructor, and don't have to check Authority
   // The new way, inc constructor
   bReplicates = true;
   SetReplicatingMovement(true);
+```
+
+# Travelling
+
+[Documentation](https://docs.unrealengine.com/4.27/en-US/InteractiveExperiences/Networking/Travelling/)
+
+There are two main ways to travel: Seamless and non-seamless. The main difference, is that seamless travel is a non-blocking operation, while non-seamless will be a blocking call.
+
+When a client executes a non-seamless travel, the client will disconnect from the server and then re-connect to the same server, which will have the new map ready to load.
+
+It is recommended that UE4 multiplayer games use seamless travel when possible. It will generally result in a smoother experience, and will avoid any issues that can occur during the reconnection process. 
+
+There are three ways in which a non-seamless travel must occur:
+- When loading a map for the first time
+- When connecting to a server for the first time as a client
+- When you want to end a multiplayer game, and start a new one 
+
+## ServerTravel
+
+[Documentation](https://docs.unrealengine.com/4.26/en-US/API/Runtime/Engine/Engine/UWorld/ServerTravel/)
+
+> Jumps the server to new level.
+
+ServerTravel is performed on the `UWorld` object in the server game instance.
+
+`bool ServerTravel(const FString& InURL, bool bAbsolute = false, bool bShouldSkipGameNotify = false)` 
+
+- UWorld method jumps **the server** to new level.
+- Example: `World->ServerTravel("/Game/ThirdPerson/Maps/ThirdPersonMap?listen");`
+  - loads the map as a listen server
+- Clients will automatically be moved to the new map.
+- **NOTE:** The server URL conforms to, and accepts the same arguments as the [CLI](#cli)
+
+## ClientTravel
+
+[Documentation](https://docs.unrealengine.com/4.27/en-US/API/Runtime/Engine/GameFramework/APlayerController/ClientTravel/)
+
+> Travel to a different map or IP address. Calls the PreClientTravel event before doing anything. This is implemented as a locally executed wrapper for ClientTravelInternal, to avoid API compatability breakage
+
+ClientTravel is performed on the player's `PlayerController` instance.
+
+`void ClientTravel(const FString& URL, enum ETravelType TravelType, bool bSeamless = false, FGuid MapPackageGuid = FGuid());`
+
+Need to pass `ETravelType`:
+```cpp
+enum ETravelType
+{
+  TRAVEL_Absolute,   // Absolute URL
+  TRAVEL_Partial,    // Partial (carry name, reset server).
+  TRAVEL_Relative,   // Relative URL.
+  TRAVEL_MAX,
+};
 ```
