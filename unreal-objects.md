@@ -747,6 +747,74 @@ SpawnEmitterAtLocation / SpawnEmitterAttached
 
   - Uses a template. 
 
+# UInterface
+
+[Unreal Documentation](https://docs.unrealengine.com/5.1/en-US/interfaces-in-unreal-engine/)
+[C++ Interface in Blueprint](https://nerivec.github.io/old-ue4-wiki/pages/interfaces-in-c.html)
+
+**UInterface** operates kind of like Swift/Objective-C `protocols` 
+
+> The UINTERFACE class is not the actual interface. UInterface is an empty class that exists only for visibility to Unreal Engine's reflection system. **The actual interface that will be inherited by other classes must have the same class name, but with the initial "U" changed to an "I".**
+
+The methods are implemented in objects that inheirit from the `IInterface` subclass. This avoids "Diamond Inheirtance"
+
+**NOTE:** Declare the interface methods as *pure virtual* methods by initializing them to 0 in the declaration.
+
+Example:
+
+```cpp
+UINTERFACE(MinimalAPI, Blueprintable)
+class UReactToTriggerInterface : public UInterface
+{
+    GENERATED_BODY()
+};
+
+class IReactToTriggerInterface
+{    
+    GENERATED_BODY()
+
+public:
+    /** Add interface function declarations here */
+  virtual void MyInterfaceMethod() = 0;
+};
+```
+
+### UINTERFACE
+
+#### MinimalAPI
+
+Causes only the class's type information to be exported for use by other modules. The class can be cast to, but the functions of the class cannot be called (with the exception of inline methods). This improves compile times by not exporting everything for classes that do not need all of their functions accessible in other modules.
+
+#### meta = (CannotImplementInterfaceInBlueprint)
+
+Allows C++ implemented methods to be `BlueprintCallable` without having to use `_Implementation` in their redeclaration!
+
+#### Blueprintable
+
+If you want Blueprints to be able to implement this interface, you must add the `Blueprintable` metadata specifier to UINTERFACE macro. 
+
+#### NotBlueprintable
+
+Explicitely declares the function is NOT implmented in Blueprint
+
+#### BlueprintType
+
+Not sure what this does
+
+### UFUNCTION
+
+#### BlueprintCallable
+
+Functions using the `BlueprintCallable` specifier can be called in C++ or Blueprint using a reference to an object that implements the interface.
+
+#### BlueprintImplementableEvent
+
+Functions using `BlueprintImplementableEvent` can not be overridden in C++, but can be overridden in any Blueprint class that implements or inherits your interface.
+
+#### BlueprintNativeEvent
+
+Functions using `BlueprintNativeEvent` can be implemented in C++ by overriding a function with the same name, but with the suffix `_Implementation` added to the end. 
+
 # Sound
 
   - `#include "Sound/SoundBase.h"`
