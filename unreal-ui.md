@@ -6,6 +6,16 @@
 
 ---
 
+# Fonts
+
+[Google Fonts](https://fonts.google.com/)
+
+# Styling
+
+[Unreal Documentation](https://docs.unrealengine.com/5.1/en-US/umg-styling-in-unreal-engine/)
+
+- Nine-slice image is an image split into 9 segments, in which the outside 8 segments act as a border
+
 # Widgets
 
 - **Tip:** `RemoveFromParent` on `self` from the Widget's Event Graph will remove the widget instance from the scene entirely.
@@ -25,7 +35,7 @@
 - **Bind** 
     - Links component properties to widget variables
 
-### Anchor
+## Anchor
   
   - Used to maintain component position.
   
@@ -36,6 +46,18 @@
 ### Slots
 
 Widgets can have a number of slots. A Canvas is a container with infinite slots. The Button is a container with one slot.
+
+# Buttons
+
+## Button Appearance
+
+### Draw As 
+
+  - **Box**: Scales image as a 9 size, maintaining margins
+
+  - **Border**: Draws the image margins according to 9 slice format. Only margins are rendered 
+
+  - **Image**: No margins considered. Entire image is scaled proportionally 
 
 # Panels
 
@@ -53,11 +75,13 @@ These lay out thier child components in slot order.
 
 ## Size Box
 
-Enforces size limits for its child slot.
+Container that enforces size limits for its child slot.
 
 Can also use as empty spacers, and can automatically *Fill* inside a Horizontal/Vert Box to dynamically and evenly space.
 
 ## Scale Box
+
+Container that manages and maintains child proportions when scaled to different sizes
 
 ## Overlay
 
@@ -70,6 +94,20 @@ Acts as a kind of sub canvas, but enforces overlap order by the slot order, wher
 - `#include "Blueprint/UserWidget.h`
 
 - Widget Base class
+
+## BindWidget
+
+`UPROPERTY(meta = (BindWidget))`
+
+**meta** property "BindWidget" exposes a Widget superclass property to its Blueprint subclass, and links them via their **Name**
+
+- [Blog Post Reference](https://benui.ca/unreal/ui-bindwidget/)
+
+- `BindWidgetOptional` allows for compilation without bound widget being set. 
+
+- Some warnings:
+  1. This can create a dependency cycle
+  2. This pattern can create invisible failure points for your UI artist. (i.e. renaming a binded property in the widget will create a build failure and/or break the data connection)
 
 ### Creating a Widget
 
@@ -131,8 +169,6 @@ Example:
 
 - `SetLockMouseToViewportBehavior(EMousLockMode)`
 
-## Widget Palette
+## Widget Methods
 
-  - Text
-  
-    - "Size To Content" keeps the bounding box to the size of the text content.
+- `Initialize()` - override to setup up properties in a widget class. (Don't forget to call Super!)
