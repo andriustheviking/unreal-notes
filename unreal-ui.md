@@ -87,6 +87,12 @@ Container that manages and maintains child proportions when scaled to different 
 
 Acts as a kind of sub canvas, but enforces overlap order by the slot order, where bottom-most slot is front-most visually.
 
+*Tip:* User Overlay and Image to give an image a background. The Image can be set to just a solid color
+
+# WidgetSwitcher
+
+Shows only one slot at a time via the **Active Widget Index**
+
 # UUserWidget
 
 - [Documentation](https://docs.unrealengine.com/5.1/en-US/API/Runtime/UMG/Blueprint/UUserWidget/)
@@ -172,3 +178,9 @@ Example:
 ## Widget Methods
 
 - `Initialize()` - override to setup up properties in a widget class. (Don't forget to call Super!)
+
+- `OnLevelRemovedFromWorld()` - called when top level widget is in the viewport and the world is potentially coming to an end. Perform cleanup.
+
+- `AddToViewport()` - See [Adding To Viewport](#adding-to-viewport)
+
+- `RemoveFromViewport()` 
