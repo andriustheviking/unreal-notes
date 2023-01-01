@@ -10,6 +10,8 @@ Welcome to my live notes taken for learning Unreal Engine.
 
 ## [C++ Notes](./cpp-notes.md)
 
+## [Unreal Architecture](./unreal-architecture.md)
+
 ## [Unreal Animation](./unreal-animation.md)
 
 ## [Unreal AI](./unreal-ai.md)

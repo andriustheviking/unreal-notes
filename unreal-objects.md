@@ -174,7 +174,7 @@ DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_FiveParams( FComponentHitSignature, UP
   // Tada! We now have a class type of a BP in C++.
   UE_LOG(LogTemp, Warning, TEXT("Found class %s"), *MenuWidgetClass->GetName());
   ```
-
+**Note:** `/Game/` path points to the `/Project/Content/` dir
 
 - `UObject::CreateDefaultSubobject` 
 
@@ -266,6 +266,22 @@ Two primary event types:
 - `TActorRange<T>(UWorld *)` - Returns all Actors in a world of a given type
 
 # Kismet Library
+
+## SystemLibrary
+
+`#include "Kismet/KismetSystemLibrary.h"`
+
+- QuitGame()
+```cpp
+/**Exit the current game 
+   * @param SpecificPlayer  The specific player to quit the game. If not specified, player 0 will quit.
+   * @param QuitPreference  Form of quitting.
+   * @param bIgnorePlatformRestrictions Ignores and best-practices based on platform (e.g on some consoles, games should never quit). Non-shipping only */
+  UFUNCTION(BlueprintCallable, Category="Game",meta=(WorldContext="WorldContextObject", CallableWithoutWorldContext))
+  static void QuitGame(const UObject* WorldContextObject, class APlayerController* SpecificPlayer, TEnumAsByte<EQuitPreference::Type> QuitPreference, bool bIgnorePlatformRestrictions);
+```
+
+## GameplayStatics
 
 `#include "Kismet/GameplayStatics.h"`
 
@@ -754,9 +770,9 @@ SpawnEmitterAtLocation / SpawnEmitterAttached
 
 **UInterface** operates kind of like Swift/Objective-C `protocols` 
 
-> The UINTERFACE class is not the actual interface. UInterface is an empty class that exists only for visibility to Unreal Engine's reflection system. **The actual interface that will be inherited by other classes must have the same class name, but with the initial "U" changed to an "I".**
+> The UINTERFACE class is not the actual interface. UInterface is an empty class that exists only for visibility to Unreal Engine's reflection system. *The actual interface that will be inherited by other classes must have the same class name, but with the initial "U" changed to an "I".*
 
-The methods are implemented in objects that inheirit from the `IInterface` subclass. This avoids "Diamond Inheirtance"
+**Reference the interface object using the `IMyInterface` class name** The methods are implemented in objects that inheirit from the `IInterface` subclass. This avoids "Diamond Inheirtance"
 
 **NOTE:** Declare the interface methods as *pure virtual* methods by initializing them to 0 in the declaration.
 
@@ -789,6 +805,10 @@ Causes only the class's type information to be exported for use by other modules
 
 Allows C++ implemented methods to be `BlueprintCallable` without having to use `_Implementation` in their redeclaration!
 
+#### BlueprintType
+
+Exposes the Interface to to Blueprint
+
 #### Blueprintable
 
 If you want Blueprints to be able to implement this interface, you must add the `Blueprintable` metadata specifier to UINTERFACE macro. 
@@ -796,10 +816,6 @@ If you want Blueprints to be able to implement this interface, you must add the 
 #### NotBlueprintable
 
 Explicitely declares the function is NOT implmented in Blueprint
-
-#### BlueprintType
-
-Not sure what this does
 
 ### UFUNCTION
 
