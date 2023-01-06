@@ -7,90 +7,15 @@
 
 # General Design Tips
 
-1. Never trust the Client! Server should always test (check) if a client can perform action. *(i.e. does the client have ammo to shoot?)*
+**Never trust the Client!** Server should always test (check) if a client can perform action. *(i.e. does the client have ammo to shoot?)*
 
-2. Debugging tips:
+#### Debugging tips:
+
   - Unsuppress `DevNetTraffic` to see logging of all replicated Actors and properties. 
   - The console command `StatNet` is also useful. 
   - It is also useful to use the *Network Profiler* to examine packets that Unreal Engine is sending and receiving.
 
-# Dedicated vs Listen Server
-
-## Dedicated Servers 
-
-- Dedicated servers do not require clients
-- Can be run on Virtual Servers that players can connect via fixed IP-Address
-- No visual component and no Character representation in-game
-
-## Listen-Server
-
-- A Listen-Server is a Server that is also a Client, so there is always at least one Client connected.
-
-# Object Ownership
-
-Game Architecture is separated between server and its clients into the following general sections:
-
-### Server Only
-
-These objects only exist on server
-
-- `AGameMode` 
-  - Used to define rules, setup, track points, check win conditions.
-  - Will have GameMode for Deathmatch, TeamDeathmatch, etc...
-  - Clients will get `nullptr`
-  - Manages GameState, replicated to Clients
-  - GameMode can consume the **Options** passed via `OpenLevel`, `ServerTravel` or CLI
-    - Example: `UGameplayStatics::ParseOptions(OptionsString, "MaxNumPlayers")`
-  - **Tip** Check `override` functions to see what it can/should do
-
-### Server & Clients
-
-These on Server and are replicated to all Clients
-
-- [`AGameState`] (https://docs.unrealengine.com/5.1/en-US/API/Runtime/Engine/GameFramework/AGameState/)
-  - Use to convey information relevent to all players (ie current score)
-  - Useful default properties:
-    - `TArray<APlayerState *> `**`PlayerArray`** 
-      - Note: The PlayerArray is not directly replicated, but every PlayerState is.
-    - `Fname MatchState`
-    - `ElapsedTime`
-
-- `APlayerState`
-  - The PlayerState is replicated to everyone, accessable via the **GameState.PlayerArray**
-  - Useful to store Name, Score, Ping
-  - Used to reconnect players and persist them across server travel.
-  - Usefule methods to override when Player states are copied
-    - `virtual void CopyProperties(class APlayerState* PlayerState)`
-    - `virtual void OverrideWith(class APlayerState* PlayerState)`
-
-- `APawn`
-  - In this case, the Players' pawn, which is mostly replicated to all clients.
-  - Useful methods:
-    - `virtual void PossessedBy(AController *NewController)`
-    - `virtual void UnPossessed()`
-
-### Server & Owning Client
-
-Exists on Server and are replicated to a single player's client
-
-- `APlayerController`
-
-  - RPC is used to pass info from client to server
-
-  - `GetPlayerController(0)`
-    - **Listen-Server** - returns the **Listen-Server's** PlayerController
-    - **Client** - returns the **Client's** Player Controller
-    - **Dedicated Server** - returns the first Client's PlayerController.
-    - **NOTE: Other numbers than '0' will not return other Clients for a Client.** This index is meant to be used for local Players (Splitscreen), which we won't cover.
-
-### Owning Client Only
-
-- `AHUD`
-  - HUD was used to draw UI before UMG / Widgets. 
-
-- `Widgets` (UMG)
-
-# Play Modes
+# Editor Play Modes
 
 - In Editor Play Modes, can select number of players and Net Mode.
 
@@ -163,9 +88,85 @@ The additional options are specified by appending them to the map name or server
 
   - `spectatoronly` Starts the game in spectator mode.
 
+# Dedicated vs Listen Server
+
+## Dedicated Servers 
+
+- Dedicated servers do not require clients
+- Can be run on Virtual Servers that players can connect via fixed IP-Address
+- No visual component and no Character representation in-game
+
+## Listen-Server
+
+- A Listen-Server is a Server that is also a Client, so there is always at least one Client connected.
+
+# Object Ownership
+
+Game Architecture is separated between server and its clients into the following general sections:
+
+## Server Only
+
+*These objects only exist on server*
+
+- `AGameMode` 
+  - Used to define rules, setup, track points, check win conditions.
+  - Will have GameMode for Deathmatch, TeamDeathmatch, etc...
+  - Clients will get `nullptr`
+  - Manages GameState, replicated to Clients
+  - GameMode can consume the **Options** passed via `OpenLevel`, `ServerTravel` or CLI
+    - Example: `UGameplayStatics::ParseOptions(OptionsString, "MaxNumPlayers")`
+  - **Tip** Check `override` functions to see what it can/should do
+
+## Server & Clients
+
+*These on Server and are replicated to all Clients*
+
+- [`AGameState`](https://docs.unrealengine.com/5.1/en-US/API/Runtime/Engine/GameFramework/AGameState/)
+  - Use to convey information relevent to all players (ie current score)
+  - Useful default properties:
+    - `TArray<APlayerState *> `**`PlayerArray`** 
+      - Note: The PlayerArray is not directly replicated, but every PlayerState is.
+    - `Fname MatchState`
+    - `ElapsedTime`
+
+- `APlayerState`
+  - The PlayerState is replicated to everyone, accessable via the **GameState.PlayerArray**
+  - Useful to store Name, Score, Ping
+  - Used to reconnect players and persist them across server travel.
+  - Usefule methods to override when Player states are copied
+    - `virtual void CopyProperties(class APlayerState* PlayerState)`
+    - `virtual void OverrideWith(class APlayerState* PlayerState)`
+
+- `APawn`
+  - In this case, the Players' pawn, which is mostly replicated to all clients.
+  - Useful methods:
+    - `virtual void PossessedBy(AController *NewController)`
+    - `virtual void UnPossessed()`
+
+## Server & Owning Client
+
+*Exists on Server and are replicated to a single player's client*
+
+- `APlayerController`
+
+  - RPC is used to pass info from client to server
+
+  - `GetPlayerController(0)`
+    - **Listen-Server** - returns the **Listen-Server's** PlayerController
+    - **Client** - returns the **Client's** Player Controller
+    - **Dedicated Server** - returns the first Client's PlayerController.
+    - **NOTE: Other numbers than '0' will not return other Clients for a Client.** This index is meant to be used for local Players (Splitscreen), which we won't cover.
+
+## Owning Client Only
+
+- `AHUD`
+  - HUD was used to draw UI before UMG / Widgets. 
+
+- `Widgets` (UMG)
+
 # Authority
 
-Only the server "Has Authority"
+Only the server "HasAuthority". This means the Server is the source of truth for the game. 
 
 ### bool HasAuthority() 
 
