@@ -292,6 +292,7 @@ Two primary event types:
 - `GetPlayerPawn(const UObject* WorldContextObject, int32 PlayerIndex)`
 
 - `GetPlayerController(const UObject* WorldContextObject, int32 PlayerIndex)`
+  - Player Index only works for local multiplayer
 
 - `ApplyDamage()`
   - will cause *`OnTakeAnyDamage`* to be called called on object
@@ -487,10 +488,16 @@ Two primary event types:
 ### APlayerController
   
   - [Documentation](https://docs.unrealengine.com/5.1/en-US/API/Runtime/Engine/GameFramework/APlayerController/)
+
   - Accepts player input and issues commands to Player Pawn
+
   - **Autoposses Player** sets player pawn automatically at beginning of level
+
   - Generally speaking, UI logic should be implemented on Player Controllers.
+
   - User the PC to set the input mode (ie mouse for menus)
+
+  **Tip:** It is a good practice to place Character specific Input (Cars work differently than Humans) into your Character/Pawn Classes and to put Input that should work with all Characters or even when the Character Object is not valid, into your PlayerController
 
 #### PlayerController Methods
 
