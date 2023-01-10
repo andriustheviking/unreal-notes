@@ -8,6 +8,8 @@ Welcome to my live notes taken for learning Unreal Engine.
 
 ## [Design Tips](./design-tips.md)
 
+## [Building](./build-notes.md)
+
 ## [C++ Notes](./cpp-notes.md)
 
 ## [Unreal Architecture](./unreal-architecture.md)
