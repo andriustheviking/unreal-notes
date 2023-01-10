@@ -292,7 +292,7 @@ Two primary event types:
 - `GetPlayerPawn(const UObject* WorldContextObject, int32 PlayerIndex)`
 
 - `GetPlayerController(const UObject* WorldContextObject, int32 PlayerIndex)`
-  - Player Index only works for local multiplayer
+  - Note: Player Index only works for local multiplayer
 
 - `ApplyDamage()`
   - will cause *`OnTakeAnyDamage`* to be called called on object
