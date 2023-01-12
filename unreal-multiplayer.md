@@ -24,6 +24,10 @@
 - [The UE4 Network Compendium](https://assets.teachablecdn.com/pdf_viewer/web/viewer.html?file=https://www.filepicker.io/api/file/b6AoRVWRphvDRp8QZ4jA)
 - [Unreal UE4 Networking Overview](https://docs.unrealengine.com/udk/Three/NetworkingOverview.html)
 
+## Platform Online Subsystems
+
+- [Steamworks Notes](./multiplayer-subsystems/steamworks.md)
+
 # General Design Tips
 
 **Never trust the Client!** Server should always test (check) if a client can perform action. *(i.e. does the client have ammo to shoot?)*
