@@ -57,10 +57,17 @@
 
 To create a new Unreal C++ object that can be accessed in the editor, highlight the **"C++ Classes"** folder in the Content Directory, press **"+ Add"** > **"New C++ Class...**. Unreal will generate the header and implementation files, and hook it up in the project.
 
+## Unreal TSharedPtr
+
+- Unreal has a [TSharedPtr typedef](https://docs.unrealengine.com/5.1/en-US/API/Runtime/Core/Templates/TSharedPtr/).
+
+- To check null, must use `.IsValid()` method
+
 ### Structs
 
 - `FName`
   - `Name_None` is FName null equivalent
+  - Need to call `.ToString()` to get FString pointer.
 
 ### Classes
 

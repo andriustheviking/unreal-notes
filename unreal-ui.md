@@ -26,6 +26,14 @@
   
   - **Event Graph** - Blueprint event graph
 
+## Dependency
+
+- Unreal C++ requires adding the **`UMG`** Module Dependency in `Source/<ProjectName>/ProjectName.Build.cs` file:
+  
+``` c#
+PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "GameplayTasks", "UMG" });
+```
+
 ## Widget Components
 
 - Widgets are made of Widget Components, like text, boxes, images, etc
@@ -126,11 +134,6 @@ WidgetT * CreateWidget
   TSubclassOf< UUserWidget > UserWidgetClass,
   FName WidgetName
 ) 
-```
-
-- **Note:** To Compile `UUserWidgets`, we need to add the **`UMG`** Module Dependency in `Source/<ProjectName>/ProjectName.Build.cs` file. Example:
-``` cpp
-PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "GameplayTasks", "UMG" });
 ```
 
 - Can instantiate widget in C++ (in PlayerController) adding a `UPROPERTY TSubclassOf<UUserWidget>` and setting the BP_Widget we created to that property. Then in the PlayerController.cpp, we create and manage it.  

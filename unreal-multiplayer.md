@@ -572,27 +572,43 @@ There are three main travelling functions:
 
 See [Unreal Wiki: Online Services](https://unrealcommunity.wiki/online-services-f30a0e) for a list of available services.
 
+## Dependency
+
+Requires adding `OnlineSubsystem` to **PublicDependencyModuleNames** in `Source/<ProjectName>/ProjectName.Build.cs`:
+
+```c#
+PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "GameplayTasks", "OnlineSubsystem" });
+```
+
 ## Basic Design
 
 The Online Subsystem exists to provide abstraction to common online functionality across available platforms *(Steam, Xbox Live, etc...)*.
 
-When loaded, will try to load the default platform server module specified in `Engine.ini`:
+When loaded, will try to load the default platform server module specified in `Config/`**`Engine.ini`**:
 ```
 [OnlineSubsystem]
-DefaultPlatformService = <Default Platform Identifier>
+DefaultPlatformService=<Default Platform Identifier>
 ```
 If Successful, the default interface will be available via static accessor:
 `static IOnlineSubsystem* Get(FName::Name_None);`
 
-### Subsystems:
+### NULL Subsystem
 
-- **SubsystemNull** Allows you to host LAN sessions.
+- Allows you to host LAN, test locally. 
 
-- Subsystems like Steam allow you to host Servers/Sessions visible online.
+- Engine.ini: `DefaultPlatformService=NULL`
 
-  - Example: `IOnlineSubsystem::Get(FName("Steam"));`
+- Returned by `IOnlineSubsystem::Get();`
+
+### Getting a Subsystem
+
+- Subsystems are loading at runtime via `IOnlineSubsystem::Get(FName("Steam"));`
 
 - Custom Subsystem/Master Servers must be built outside of UE
+
+#### Where to Get (Load) the subsystem?
+
+The `UGameInstance::Init` is a valid place to load the subsystem.
 
 ### Delegate Design
 
@@ -607,7 +623,7 @@ The following interfaces are included in the Online Subsystem. *Not all platform
 Primary Interfaces are as follows:
 - **Profile:** Anything related to a given User Profile and associated metadata
 - **Friends**
-- **Sessions:** Anything related to managing a Session and its state
+- [**Sessions:**](https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/Online/SessionInterface/) Anything related to managing a Session and its state
 - **Shared Cloud:** Interface for sharing files on the cloud
 - **User Cloud:** Interface for user cloud file storage
 - **Leaderboards**
