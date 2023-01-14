@@ -621,9 +621,10 @@ Common practice is to `Add()` the delegate before calling the appropriate functi
 The following interfaces are included in the Online Subsystem. *Not all platforms implement every Interface, so plan accordingly.*
 
 Primary Interfaces are as follows:
+
 - **Profile:** Anything related to a given User Profile and associated metadata
 - **Friends**
-- [**Sessions:**](https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/Online/SessionInterface/) Anything related to managing a Session and its state
+- **Sessions:** ([IOnlineSession](#ionlinesession)) Anything related to managing a Session and its state.
 - **Shared Cloud:** Interface for sharing files on the cloud
 - **User Cloud:** Interface for user cloud file storage
 - **Leaderboards**
@@ -633,15 +634,27 @@ Primary Interfaces are as follows:
 
 See [Online Subsystem Documentation](https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/Online/) for implementation
 
-# `IOnlineSession` and `AGameSession`
+# IOnlineSession
 
-The Session interface is [`IOnlineSession`](https://docs.unrealengine.com/5.1/en-US/API/Plugins/OnlineSubsystem/Interfaces/IOnlineSession/)
+- `#include Interfaces/OnlineSessionInterface.h`
 
-Only one SessionInterface will exist at a time: that is the interface for the platform the engine is on.
+- The Session interface is [`IOnlineSession`](https://docs.unrealengine.com/4.27/en-US/API/Plugins/OnlineSubsystem/Interfaces/IOnlineSession/)
 
-The game interacts with the platform Session via `AGameSession` is the object that wraps the Session Interface, and is how the game calls into it. The GameSession is created and owned by the GameMode, and also only exists on the Server when running an online game. 
+- [Documentation on using Sessions](https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/Online/SessionInterface/)
 
-There can be multiple types of GameSessions, but only one instance at a time. This is common for Dedicated Servers
+- Only one SessionInterface will exist at a time: that is the interface for the platform the engine is on. The game interacts with the platform Session via `AGameSession` is the object that wraps the Session Interface, and is how the game calls into it. 
+
+- The GameSession is created and owned by the GameMode, and also only exists on the Server when running an online game. 
+
+- There can be multiple types of GameSessions, but only one instance at a time. This is common for Dedicated Servers
+
+- The Session Settings are defined by the `FOnlineSessionSettings` class.
+
+## `IOnlineSessionPtr IOnlineSubsystem::GetSessionInterface()`
+
+To get the subsystem interface call `GetSessionInterface()` on the subsystem. This will return a `TSharedPtr` `IOnlineSessionPtr`. 
+
+**Note:** Can't forward declare ptr types. If declared in class header, must include `#include "OnlineSubsystem.h"`.
 
 ## Sessions and Matchmaking
 
@@ -659,7 +672,21 @@ A session is the instance of the game runnign on a server with a given set of pr
   - *Update* the session and go back to *Waiting*
   - *Destroy* the session.
 
+### `CreateSession()`
+
+  - CreateSession requires a delegate to handle completion. Example:
+  ```cpp
+  // Assign delegate in setup
+  SessionInterface->OnCreateSessionCompleteDelegates.AddUObject(this, &UPuzzlePlatformsGameInstance::SessionWasCreated);
+  //...
+  // Create Session:
+  FOnlineSessionSettings SessionSettings;
+  SessionInterface->CreateSession(0, TEXT("HostedPuzzleSession"), SessionSettings);
+  ```
+
 ## `FOnlineSessionSettings`
+
+- `#include OnlineSessionSettings.h`
 
 - [Documentation](https://docs.unrealengine.com/5.1/en-US/API/Plugins/OnlineSubsystem/FOnlineSessionSettings/)
 
@@ -695,3 +722,5 @@ For platforms that support it, call `IOnlinSession::StartMatchmaking()`, and the
 - `IOnlineSession::SendSessionInviteToFriend()` and `IOnlineSession::SendSessionInviteToFriends()` to invite a friend.
 
   - `OnSessionInviteAccepted` - delegate
+
+## AGameSession
