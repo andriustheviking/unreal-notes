@@ -57,12 +57,6 @@
 
 To create a new Unreal C++ object that can be accessed in the editor, highlight the **"C++ Classes"** folder in the Content Directory, press **"+ Add"** > **"New C++ Class...**. Unreal will generate the header and implementation files, and hook it up in the project.
 
-## Unreal TSharedPtr
-
-- Unreal has a [TSharedPtr typedef](https://docs.unrealengine.com/5.1/en-US/API/Runtime/Core/Templates/TSharedPtr/).
-
-- To check null, must use `.IsValid()` method
-
 ### Structs
 
 - `FName`
@@ -124,7 +118,29 @@ To create a new Unreal C++ object that can be accessed in the editor, highlight 
 
 - Define a new Unreal C++ objects in the Editor, go to **Tools > New C++ Class**. Can be defined from any existing class.
 
-### TSubclassOf<T>
+## Unreal Reference Counting
+
+### TSharedPtr
+
+- `TSharedPtr` increments and decrements object ref count.
+
+- Unreal has a [TSharedPtr typedef](https://docs.unrealengine.com/5.1/en-US/API/Runtime/Core/Templates/TSharedPtr/).
+
+- To check null, must use `.IsValid()` method
+
+### Garbage Collection
+
+- Unreal GC uses the [Unreal Reflection System](https://www.unrealengine.com/en-US/blog/unreal-property-system-reflection), which allows the unreal code to analyze itself.
+  - These are included in an object via `#include "FileName.generated.h"` and registered via `UENUM()`, `UCLASS()`, `USTRUCT()`, `UFUNCTION()`, and `UPROPERTY()` macros
+
+- Unreal starts from the **root set**, objects which should be permanent. From there it traverses the **UPROPERTY** pointers of each object. So long as the parent UObject is referenced, UPROPERTY's will be guaranteed alive. Any objects not found during this process are free'd.
+
+- To dynamically add an object that's not referenced via `UPROPERTY()`, use `YourObjectInstance->AddToRoot();`. This would be used when dynamically adding Components to root in C++
+
+- `TWeakObjectPtr`/`FWeakObjectPtr` will reference an object but not keep it alive. 
+  - Use `IsValid()` to check if object if free'd
+
+## TSubclassOf<T>
 
 - Generic `UClass` type that is a subclass of another Type. 
 
@@ -132,11 +148,27 @@ To create a new Unreal C++ object that can be accessed in the editor, highlight 
 
 - Can use this to then call super methods or spawn BP objects
 
-### T * Cast<T>
+## T * Cast<T>
 
 Unreal implementation of `dynamic_cast` Returns **a pointer of type T**, or `nullptr`. Use `Cast<>` on all Unreal Objects.
 
-### Multicast Delegate
+## [Delegates](https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/ProgrammingWithCPP/UnrealArchitecture/Delegates/)
+
+### Multicast vs Singlecast
+
+- [Multicast delegates](https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/ProgrammingWithCPP/UnrealArchitecture/Delegates/Multicast/) are stored in many-to-one relationships. 
+
+- Singlecast delegates can only have one assignable callback. 
+
+### Static Delegate
+
+- Static delegates (non-dynamic) do not need to be declared as `UFUNCTIONS()`
+
+### Dynamic Delegate
+
+- Dynamic delegates are exposed via the Blueprint layer, and so they must be declared with **`UFUNCTION()`** macro
+
+- Support [reflection](#Garbage-Collection), can be serialized, their functions can be found by name, and they are slower than regular delegates.
 
 - Many-to-one delegate created via `DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE` precompiler macro.
 
@@ -145,8 +177,6 @@ Unreal implementation of `dynamic_cast` Returns **a pointer of type T**, or `nul
 - To get the call signature, need to look up the constructor macro in the Unreal header file
 
 - Add callback with `DelegateName->AddDynamic()`
-
-- **Note:** Callbacks passed to the delegate must be declared with **`UFUNCTION()`** macro
 
 - **Example:** For Collision Delegate, first three parameters build the delegate property for UPrimitiveComponent. The rest are the Hit Component delegate signature
 
@@ -159,7 +189,7 @@ DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_FiveParams( FComponentHitSignature, UP
 //... next declaration with differen params
 ```
 
-### Constructors
+## Constructors
 
 - `ConstructionHelpers::FClassFinder<T>`
 
