@@ -638,9 +638,11 @@ See [Online Subsystem Documentation](https://docs.unrealengine.com/4.27/en-US/Pr
 
 - `#include Interfaces/OnlineSessionInterface.h`
 
-- The Session interface is [`IOnlineSession`](https://docs.unrealengine.com/4.27/en-US/API/Plugins/OnlineSubsystem/Interfaces/IOnlineSession/)
+- [Overview](https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/Online/SessionInterface/)
 
-- [Documentation on using Sessions](https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/Online/SessionInterface/)
+- [Session Interface](https://docs.unrealengine.com/5.1/en-US/sessions-interface-in-unreal-engine/)
+
+- [Documentation](https://docs.unrealengine.com/4.27/en-US/API/Plugins/OnlineSubsystem/Interfaces/IOnlineSession/)
 
 - Only one SessionInterface will exist at a time: that is the interface for the platform the engine is on. The game interacts with the platform Session via `AGameSession` is the object that wraps the Session Interface, and is how the game calls into it. 
 
@@ -672,18 +674,6 @@ A session is the instance of the game runnign on a server with a given set of pr
   - *Update* the session and go back to *Waiting*
   - *Destroy* the session.
 
-### `CreateSession()`
-
-  - CreateSession requires a delegate to handle completion. Example:
-  ```cpp
-  // Assign delegate in setup
-  SessionInterface->OnCreateSessionCompleteDelegates.AddUObject(this, &UPuzzlePlatformsGameInstance::SessionWasCreated);
-  //...
-  // Create Session:
-  FOnlineSessionSettings SessionSettings;
-  SessionInterface->CreateSession(0, TEXT("HostedPuzzleSession"), SessionSettings);
-  ```
-
 ## `FOnlineSessionSettings`
 
 - `#include OnlineSessionSettings.h`
@@ -698,6 +688,37 @@ A session is the instance of the game runnign on a server with a given set of pr
   - LAN or not
   - Dedicated or Player-hosted
   - etc...
+
+### `IOnlineSession::CreateSession`
+
+- Cannot create multiple sessions with the same
+
+- CreateSession requires a delegate to handle completion. 
+
+- Example:
+  ```cpp
+  // Assign delegate in setup
+  SessionInterface->OnCreateSessionCompleteDelegates.AddUObject(this, &UPuzzlePlatformsGameInstance::SessionWasCreated);
+  //...
+  // Create Session:
+  FOnlineSessionSettings SessionSettings;
+  SessionInterface->CreateSession(0, TEXT("HostedPuzzleSession"), SessionSettings);
+  ```
+
+### `IOnlineSession::FindSessions`
+
+- [Documentation](https://docs.unrealengine.com/4.26/en-US/API/Plugins/OnlineSubsystem/Interfaces/IOnlineSession/FindSessions/1/)
+
+- `bool FindSessions( int32, const TSharedRef<FOnlineSessionSearch>& )`
+
+- Search results are stored in the `FOnlineSessionSearch`
+
+- Example:
+  ```cpp
+  TSharedRef<FOnlineSessionSearch> SessionSearchRef = MakeShared<FOnlineSessionSearch>();
+  MySessionInterface->FindSessions(0, SessionSearchRef);
+  SessionSearchPtr = SessionSearchRef;
+  ```
 
 ## Updating Sessions
 

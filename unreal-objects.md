@@ -120,13 +120,21 @@ To create a new Unreal C++ object that can be accessed in the editor, highlight 
 
 ## Unreal Reference Counting
 
-### TSharedPtr
+### [TSharedPtr](https://docs.unrealengine.com/5.1/en-US/API/Runtime/Core/Templates/TSharedPtr/)
 
 - `TSharedPtr` increments and decrements object ref count.
 
-- Unreal has a [TSharedPtr typedef](https://docs.unrealengine.com/5.1/en-US/API/Runtime/Core/Templates/TSharedPtr/).
-
 - To check null, must use `.IsValid()` method
+
+- `MakeSharable()` converts a pointer type to sharedPtr. Use `MakeShared` when possible. Otherwise the original pointer and shareptr counter may be fragmented.
+
+### [TSharedRef](https://docs.unrealengine.com/5.1/en-US/shared-references-in-unreal-engine/)
+
+- `MakeShared<T>()` creates a shared ref of type T.
+
+- A Shared Reference acts like a Shared Pointer, but Shared References *must always reference a non-null object*
+
+- Can assign TSharedPtr to TSharedRef if explicitly check ptr `.IsValid()`
 
 ### Garbage Collection
 
@@ -158,6 +166,8 @@ Unreal implementation of `dynamic_cast` Returns **a pointer of type T**, or `nul
 
 - [Multicast delegates](https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/ProgrammingWithCPP/UnrealArchitecture/Delegates/Multicast/) are stored in many-to-one relationships. 
 
+  - `Broadcast()` executes all delegate callbacks
+
 - Singlecast delegates can only have one assignable callback. 
 
 ### Static Delegate
@@ -171,8 +181,6 @@ Unreal implementation of `dynamic_cast` Returns **a pointer of type T**, or `nul
 - Support [reflection](#Garbage-Collection), can be serialized, their functions can be found by name, and they are slower than regular delegates.
 
 - Many-to-one delegate created via `DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE` precompiler macro.
-
-- `Broadcast()` executes all delegate callbacks
 
 - To get the call signature, need to look up the constructor macro in the Unreal header file
 
