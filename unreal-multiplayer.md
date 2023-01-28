@@ -70,7 +70,7 @@ Server Launch Example:
 
 Client Launch Example:
 ```
-"C:\Program Files\Epic Games\UE_5.0\Engine\Binaries\Win64\UnrealEditor-Cmd.exe" "C:\Users\andri\Workspace\UnrealTutorials\Multiplayer\01-PuzzlePlatform\Multiplayer01.uproject" <Server IP/LAN Address>:<Optional Port> -game -log -ResX=1280 -ResY=720 -WINDOWED
+"C:\Program Files\Epic Games\UE_5.0\Engine\Binaries\Win64\UnrealEditor-Cmd.exe" "C:\Users\andri\Workspace\UnrealTutorials\Multiplayer\03-SteamSubsystem\PuzzlePlatforms.uproject" -game -log -ResX=1280 -ResY=720 -WINDOWED
 ```
 
 ### URL
@@ -696,7 +696,7 @@ A session is the instance of the game runnign on a server with a given set of pr
   SessionSettings.bShouldAdvertise = true;
 ```
 
-### `IOnlineSession::CreateSession`
+## `IOnlineSession::CreateSession`
 
 - Cannot create multiple sessions with the same
 
@@ -712,7 +712,7 @@ A session is the instance of the game runnign on a server with a given set of pr
   SessionInterface->CreateSession(0, TEXT("HostedPuzzleSession"), SessionSettings);
   ```
 
-### `IOnlineSession::FindSessions`
+## `IOnlineSession::FindSessions`
 
 - [Documentation](https://docs.unrealengine.com/4.26/en-US/API/Plugins/OnlineSubsystem/Interfaces/IOnlineSession/FindSessions/1/)
 
@@ -731,6 +731,51 @@ A session is the instance of the game runnign on a server with a given set of pr
 ### `FOnlineSessionSearch`
 
 - Search results stored in `TArray<FOnlineSessionSearchResult> FOnlineSessionSearch::SearchResults`
+
+## [`IOnlineSession::JoinSession()`](https://docs.unrealengine.com/5.1/en-US/API/Plugins/OnlineSubsystem/Interfaces/IOnlineSession/JoinSession/1/)
+
+- Must join the session via the session interface BEFORE performing Travel()
+
+- Then Travel in the `FOnJoinSessionComplete` delegate call
+
+- Example:
+```cpp
+  MySessionInterface->JoinSession(0, SESSION_NAME, SessionSearch->SearchResults[searchResultIndex]);
+```
+
+### [`FOnJoinSessionComplete`](https://docs.unrealengine.com/5.1/en-US/API/Plugins/OnlineSubsystem/Interfaces/FOnJoinSessionComplete/) delegate
+
+- Pass the ConnectInfo from  `GetResolvedConnectString` to PlayerTravel()
+
+Example:
+  ```cpp
+  void UPuzzlePlatformsGameInstance::OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result)
+  {
+    if (Result != EOnJoinSessionCompleteResult::Success) {
+      UE_LOG(LogTemp, Error, TEXT("Could not join session. Result=%u"), Result);
+      return;
+    }
+
+    FString ConnectInfo;
+    if (MySessionInterface->GetResolvedConnectString(SessionName, ConnectInfo)) {
+      
+      APlayerController* PlayerController = GetFirstLocalPlayerController();
+      if (!ensure(PlayerController != nullptr)) return;
+
+      UE_LOG(LogTemp, Warning, TEXT("Joining Session %s with connectin info %s"), *SessionName.ToString(), *ConnectInfo);
+
+      PlayerController->ClientTravel(ConnectInfo, ETravelType::TRAVEL_Absolute);
+    }
+  }
+  ```
+
+#### [`IOnlineSession:::GetResolvedConnectString()`](https://docs.unrealengine.com/5.1/en-US/API/Plugins/OnlineSubsystem/Interfaces/IOnlineSession/GetResolvedConnectString/1/)
+
+- `bool GetResolvedConnectString(FName SessionName, FString & ConnectInfo, FName PortType)`
+
+  - `SessionName` the name of the session to resolve
+  - `ConnectInfo` the string containing the platform specific connection information
+  - `PortType`  type of port to append to result (Game, Beacon, etc)
 
 ## Updating Sessions
 
