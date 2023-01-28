@@ -689,6 +689,13 @@ A session is the instance of the game runnign on a server with a given set of pr
   - Dedicated or Player-hosted
   - etc...
 
+```cpp
+  FOnlineSessionSettings SessionSettings;
+  SessionSettings.bIsLANMatch = true;
+  SessionSettings.NumPublicConnections = 2;
+  SessionSettings.bShouldAdvertise = true;
+```
+
 ### `IOnlineSession::CreateSession`
 
 - Cannot create multiple sessions with the same
@@ -711,14 +718,19 @@ A session is the instance of the game runnign on a server with a given set of pr
 
 - `bool FindSessions( int32, const TSharedRef<FOnlineSessionSearch>& )`
 
-- Search results are stored in the `FOnlineSessionSearch`
+- Search results are stored in the `FOnlineSessionSearch` 
 
 - Example:
   ```cpp
   TSharedRef<FOnlineSessionSearch> SessionSearchRef = MakeShared<FOnlineSessionSearch>();
   MySessionInterface->FindSessions(0, SessionSearchRef);
+  // Store the ref as a pointer to access on success
   SessionSearchPtr = SessionSearchRef;
   ```
+
+### `FOnlineSessionSearch`
+
+- Search results stored in `TArray<FOnlineSessionSearchResult> FOnlineSessionSearch::SearchResults`
 
 ## Updating Sessions
 

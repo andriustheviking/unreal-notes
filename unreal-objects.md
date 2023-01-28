@@ -45,6 +45,10 @@
   - Very handy with FVector properties.
   - **NOTE** the underlying FVector will be object-relative, not world-relative! So (0,0,0) is centered on the object.
 
+## DrawDebugHelpers.h
+ - `DrawDebugLine()`
+ - `DrawDebugSphere()`
+
 ## Asserts
 
 [Documentation](https://docs.unrealengine.com/4.26/en-US/ProgrammingAndScripting/ProgrammingWithCPP/Assertions/)
@@ -57,28 +61,41 @@
 
 To create a new Unreal C++ object that can be accessed in the editor, highlight the **"C++ Classes"** folder in the Content Directory, press **"+ Add"** > **"New C++ Class...**. Unreal will generate the header and implementation files, and hook it up in the project.
 
-### Structs
+## Unreal Types:
+
+## Text types
+
+- Use `Text` variables where localised alpha-numeric display is required
+- Use `Name` variables for alpha-numeric network sends/receives, or where a smaller memory footprint is desired
+- Use `String` variables for all other alpha-numeric requirements, unless forced to cast, or if you know in advance that you will be using string manipulation functions
 
 - `FName`
+  - 8 bytes / character
+  - Recommended for sending over network.
   - `Name_None` is FName null equivalent
   - Need to call `.ToString()` to get FString pointer.
-
-### Classes
+  - Dereference FString to get FName
 
  - `FString`
+  - 16 bytes / character
+  - `GetName()` returns an object's string name
   - If passing to `%s` token, need to dereference with `*` operator 
   - To create a dynamic FString use `FString::Printf`. Example: `FString::Printf(TEXT("Joining %s"), *Address))`. where Address is type `const FString&`.
+  - Example:
+  ```cpp
+    int32 ServerID = ServerListScrollBox->GetSlots().Num();
+    FString ServerNameString = FString::Printf(TEXT("Server %d"), ServerID);
+  ```
 
-### Functions
-
- - `Destroy()`
- - `GetName()`
- - `GetOwner()`
- - `SetOwner()`
-
-### DrawDebugHelpers.h
- - `DrawDebugLine()`
- - `DrawDebugSphere()`
+- `FText`
+  - 40 bytes per character
+  - Used for visibly displayed text, ie [`UTextBlocks`](./unreal-ui.md)
+  - `FText::FromString(SomeString)` to convert FString to FText
+  - Example:
+  ```cpp
+    UTextBlock* ServerName = NewObject<UTextBlock>();   
+    ServerName->SetText(FText::FromString(ServerNameString));
+  ```
 
 ## Unreal Math Library
 
@@ -120,6 +137,16 @@ To create a new Unreal C++ object that can be accessed in the editor, highlight 
 
 ## Unreal Reference Counting
 
+### [TOptional](https://docs.unrealengine.com/5.1/en-US/API/Runtime/Core/Misc/TOptional/)
+
+Struct for *statically allocated optionals*. Since it's static, not a pointer. **Use `IsSet()` in place of *IsValid*.**
+
+- `IsSet()` - returns True if the value is meaningful
+
+- `GetValue()` returns the value
+
+- Assign value with `=` like a normal variable
+
 ### [TSharedPtr](https://docs.unrealengine.com/5.1/en-US/API/Runtime/Core/Templates/TSharedPtr/)
 
 - `TSharedPtr` increments and decrements object ref count.
@@ -144,6 +171,8 @@ To create a new Unreal C++ object that can be accessed in the editor, highlight 
 - Unreal starts from the **root set**, objects which should be permanent. From there it traverses the **UPROPERTY** pointers of each object. So long as the parent UObject is referenced, UPROPERTY's will be guaranteed alive. Any objects not found during this process are free'd.
 
 - To dynamically add an object that's not referenced via `UPROPERTY()`, use `YourObjectInstance->AddToRoot();`. This would be used when dynamically adding Components to root in C++
+
+- `SetOwner()`, `GetOwner()`  sets/references the object owner in the tree
 
 - `TWeakObjectPtr`/`FWeakObjectPtr` will reference an object but not keep it alive. 
   - Use `IsValid()` to check if object if free'd
@@ -180,11 +209,21 @@ Unreal implementation of `dynamic_cast` Returns **a pointer of type T**, or `nul
 
 - Support [reflection](#Garbage-Collection), can be serialized, their functions can be found by name, and they are slower than regular delegates.
 
-- Many-to-one delegate created via `DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE` precompiler macro.
+- Declare delecate with the macro, specifying the number of parameters. Example: `DECLARE_DELEGATE_OneParam(DelegateName, Param1Type)`
+
+- Variations of the macros above for multi-cast, dynamic, and wrapped delegates are as follows:
+  - `DECLARE_MULTICAST_DELEGATE...`
+  - `DECLARE_DYNAMIC_DELEGATE...`
+  - `DECLARE_DYNAMIC_MULTICAST_DELEGATE...`
+  - `DECLARE_DYNAMIC_DELEGATE...`
+  - `DECLARE_DYNAMIC_MULTICAST_DELEGATE...`
 
 - To get the call signature, need to look up the constructor macro in the Unreal header file
 
-- Add callback with `DelegateName->AddDynamic()`
+- Add Singlecast callback with `BindDynamic()`
+  - `ServerRow->OnSelectedWidgetDelegate.BindDynamic(this, &UMainMenu::OnSelectedRow);`
+
+- Add Multicast callback with `AddDynamic(Object, ...)`
 
 - **Example:** For Collision Delegate, first three parameters build the delegate property for UPrimitiveComponent. The rest are the Hit Component delegate signature
 
@@ -564,8 +603,12 @@ Two primary event types:
   - `virtual GameHasEnded(AActor* EndGameFocus = nullptr, bIsWinner = false) override`
 
   - `WidgetT* CreateWidget(OwnerT* OwningObject, TSubclassOf<UUserWidget> UserWidgetClass = WidgetT::StaticClass(), FName WidgetName = NAME_None)`
-    - Can instantiate Blueprint widget in C++ adding a `UPROPERTY TSubclassOf<UUserWidget>` and setting the BP_Widget we created to that property. Then call `CreateWidget(this, GameOverWidgetClass);`
-    - PlayerControllers are one of the few classes that can act as Widget Owners 
+    
+    - Can instantiate Blueprint widget in C++ adding a `UPROPERTY TSubclassOf<UUserWidget>` and setting the BP_Widget we created to that property. Then call `CreateWidget(World, GameOverWidgetClass);`
+
+    - UWorld and PlayerControllers are one of the few classes that can act as Widget Owners 
+
+    - Example: `USelectableButton* ServerRow = CreateWidget<USelectableButton>(World, SelectableButtonBPSubclass);`
 
 ## TargetPoint
 
