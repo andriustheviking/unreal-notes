@@ -320,10 +320,16 @@ Always include for object properties on Unreal classes. Super important for corr
 ### Logging
 
 - `UE_LOG(Category, Level, TEXT("Some Text"))`
+  
   - [Unofficial Documentation](https://unrealcommunity.wiki/logging-lgpidy6i)
+  
     - [Verbosity](https://docs.unrealengine.com/4.27/en-US/API/Runtime/Core/Logging/ELogVerbosity__Type/)
+  
   - Level `Fatal` will log, then crash program
+  
   - `ulog` - CAPTNCAPS shortcut
+
+- To enable Verbose logging for a categry, open console command in game `~`. Then execute: `Log <LogCategory> Verbose/VeryVerbose`. Where LogCategory is the categroy youwant to enable (ie LogTemp or LogOnline)
 
 ## GameFramework Library Objects
 
