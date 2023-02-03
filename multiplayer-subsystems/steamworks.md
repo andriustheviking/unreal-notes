@@ -6,6 +6,12 @@
 
 Lobbies need to be in the same download region to show up in Lobby browser. This is set in Settings > Downloads > Download Region
 
+# Packaging Game
+
+To enable steamworks on a package, must include the following:
+
+Go to the packaged game folder `[YourGameName]/Binaries/Win64` (or other platform). In this folder create a file called `steam_appid.txt`. Inside this file just write your app id (`480` if you are using the public one for testing)
+
 # Steam Online Subsystem
 
 [Unreal Documentation](https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/Online/Steam/)
@@ -78,3 +84,26 @@ Can simply launch executable from Command Prompt or "Launch Game"
 ### Mac
 
 **Must build package** and add the executable to steam library and launch from within steam.
+
+# Lobby Settings
+
+**Tip:** Open `OnlineSessionInterfaceSteam.cpp` to see desired session setting behaviors.
+
+## Create Session Settings:
+
+```cpp
+	SessionSettings.bIsLANMatch = false;
+	SessionSettings.NumPublicConnections = 2;
+	SessionSettings.bShouldAdvertise = true;
+	SessionSettings.bUsesPresence = true; 			// For Steam, this Creates Lobby if True, else Creates Internet Session
+	SessionSettings.bUseLobbiesIfAvailable = true;
+```
+
+## Search Session Settings
+
+```cpp
+	TSharedRef<FOnlineSessionSearch> SessionSearchRef = MakeShared<FOnlineSessionSearch>();
+	SessionSearch = SessionSearchRef;
+	SessionSearch->bIsLanQuery = false;
+	SessionSearch->QuerySettings.Set(SEARCH_PRESENCE, true, EOnlineComparisonOp::Equals);
+```
