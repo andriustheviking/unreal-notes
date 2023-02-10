@@ -105,5 +105,6 @@ Can simply launch executable from Command Prompt or "Launch Game"
 	TSharedRef<FOnlineSessionSearch> SessionSearchRef = MakeShared<FOnlineSessionSearch>();
 	SessionSearch = SessionSearchRef;
 	SessionSearch->bIsLanQuery = false;
+	SessionSearch->MaxSearchResults = 100; // Default is 1
 	SessionSearch->QuerySettings.Set(SEARCH_PRESENCE, true, EOnlineComparisonOp::Equals);
 ```
