@@ -26,6 +26,12 @@
   
   - **Event Graph** - Blueprint event graph
 
+## UWidget vs UUserWidget
+
+UWidget is a single widget which can contain single Slate widget or Slate composition of widgets. UWidget can’t contain composition of UWidgets, they can parent UWidgets and layout them via Slate layout widgets, but it can not compose them ferther then that.
+
+UUserWidget main different is that it can contain free composition of UWidgets.
+
 ## Dependency
 
 - Unreal C++ requires adding the **`UMG`** Module Dependency in `Source/<ProjectName>/ProjectName.Build.cs` file:
@@ -55,9 +61,9 @@ PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engi
 
 Widgets can have a number of slots. A Canvas is a container with infinite slots. The Button is a container with one slot.
 
-# Buttons
+# UWidget
 
-## Button Appearance
+## Buttons
 
 ### Draw As 
 
@@ -67,7 +73,9 @@ Widgets can have a number of slots. A Canvas is a container with infinite slots.
 
   - **Image**: No margins considered. Entire image is scaled proportionally 
 
-# Panels
+## Spacer
+
+# UUserWidget
 
 ## Canvas Panel
   
@@ -91,6 +99,17 @@ Can also use as empty spacers, and can automatically *Fill* inside a Horizontal/
 
 Container that manages and maintains child proportions when scaled to different sizes
 
+## UScrollBox
+
+- Use for scrollable content. Loads all entries at once.
+- Does not natively support selection.
+
+## UListView
+
+- Scrollable box, but loads entries dynamically, as opposed to `UScrollBox` 
+- Better for large lists, so content can be reallocated.
+- Supports selection
+
 ## Overlay
 
 Acts as a kind of sub canvas, but enforces overlap order by the slot order, where bottom-most slot is front-most visually.
@@ -107,7 +126,9 @@ Shows only one slot at a time via the **Active Widget Index**
 
 - `#include "Blueprint/UserWidget.h`
 
-- Widget Base class
+- Widget Blueprint Base class. 
+
+- Must use `CreateWidget<>()` constructor.
 
 ## BindWidget
 

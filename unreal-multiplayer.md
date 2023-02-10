@@ -70,7 +70,7 @@ Server Launch Example:
 
 Client Launch Example:
 ```
-"C:\Program Files\Epic Games\UE_5.0\Engine\Binaries\Win64\UnrealEditor-Cmd.exe" "C:\Users\andri\Workspace\UnrealTutorials\Multiplayer\01-PuzzlePlatform\Multiplayer01.uproject" <Server IP/LAN Address>:<Optional Port> -game -log -ResX=1280 -ResY=720 -WINDOWED
+"C:\Program Files\Epic Games\UE_5.0\Engine\Binaries\Win64\UnrealEditor-Cmd.exe" "C:\Users\andri\Workspace\UnrealTutorials\Multiplayer\03-SteamSubsystem\PuzzlePlatforms.uproject" -game -log -ResX=1280 -ResY=720 -WINDOWED
 ```
 
 ### URL
@@ -621,9 +621,10 @@ Common practice is to `Add()` the delegate before calling the appropriate functi
 The following interfaces are included in the Online Subsystem. *Not all platforms implement every Interface, so plan accordingly.*
 
 Primary Interfaces are as follows:
+
 - **Profile:** Anything related to a given User Profile and associated metadata
 - **Friends**
-- [**Sessions:**](https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/Online/SessionInterface/) Anything related to managing a Session and its state
+- **Sessions:** ([IOnlineSession](#ionlinesession)) Anything related to managing a Session and its state.
 - **Shared Cloud:** Interface for sharing files on the cloud
 - **User Cloud:** Interface for user cloud file storage
 - **Leaderboards**
@@ -633,15 +634,29 @@ Primary Interfaces are as follows:
 
 See [Online Subsystem Documentation](https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/Online/) for implementation
 
-# `IOnlineSession` and `AGameSession`
+# IOnlineSession
 
-The Session interface is [`IOnlineSession`](https://docs.unrealengine.com/5.1/en-US/API/Plugins/OnlineSubsystem/Interfaces/IOnlineSession/)
+- `#include Interfaces/OnlineSessionInterface.h`
 
-Only one SessionInterface will exist at a time: that is the interface for the platform the engine is on.
+- [Overview](https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/Online/SessionInterface/)
 
-The game interacts with the platform Session via `AGameSession` is the object that wraps the Session Interface, and is how the game calls into it. The GameSession is created and owned by the GameMode, and also only exists on the Server when running an online game. 
+- [Session Interface](https://docs.unrealengine.com/5.1/en-US/sessions-interface-in-unreal-engine/)
 
-There can be multiple types of GameSessions, but only one instance at a time. This is common for Dedicated Servers
+- [Documentation](https://docs.unrealengine.com/4.27/en-US/API/Plugins/OnlineSubsystem/Interfaces/IOnlineSession/)
+
+- Only one SessionInterface will exist at a time: that is the interface for the platform the engine is on. The game interacts with the platform Session via `AGameSession` is the object that wraps the Session Interface, and is how the game calls into it. 
+
+- The GameSession is created and owned by the GameMode, and also only exists on the Server when running an online game. 
+
+- There can be multiple types of GameSessions, but only one instance at a time. This is common for Dedicated Servers
+
+- The Session Settings are defined by the `FOnlineSessionSettings` class.
+
+## `IOnlineSessionPtr IOnlineSubsystem::GetSessionInterface()`
+
+To get the subsystem interface call `GetSessionInterface()` on the subsystem. This will return a `TSharedPtr` `IOnlineSessionPtr`. 
+
+**Note:** Can't forward declare ptr types. If declared in class header, must include `#include "OnlineSubsystem.h"`.
 
 ## Sessions and Matchmaking
 
@@ -661,6 +676,8 @@ A session is the instance of the game runnign on a server with a given set of pr
 
 ## `FOnlineSessionSettings`
 
+- `#include OnlineSessionSettings.h`
+
 - [Documentation](https://docs.unrealengine.com/5.1/en-US/API/Plugins/OnlineSubsystem/FOnlineSessionSettings/)
 
 - Determines characteristics of session. 
@@ -671,6 +688,94 @@ A session is the instance of the game runnign on a server with a given set of pr
   - LAN or not
   - Dedicated or Player-hosted
   - etc...
+
+```cpp
+  FOnlineSessionSettings SessionSettings;
+  SessionSettings.bIsLANMatch = true;
+  SessionSettings.NumPublicConnections = 2;
+  SessionSettings.bShouldAdvertise = true;
+```
+
+## `IOnlineSession::CreateSession`
+
+- Cannot create multiple sessions with the same
+
+- CreateSession requires a delegate to handle completion. 
+
+- Example:
+  ```cpp
+  // Assign delegate in setup
+  SessionInterface->OnCreateSessionCompleteDelegates.AddUObject(this, &UPuzzlePlatformsGameInstance::SessionWasCreated);
+  //...
+  // Create Session:
+  FOnlineSessionSettings SessionSettings;
+  SessionInterface->CreateSession(0, TEXT("HostedPuzzleSession"), SessionSettings);
+  ```
+
+## `IOnlineSession::FindSessions`
+
+- [Documentation](https://docs.unrealengine.com/4.26/en-US/API/Plugins/OnlineSubsystem/Interfaces/IOnlineSession/FindSessions/1/)
+
+- `bool FindSessions( int32, const TSharedRef<FOnlineSessionSearch>& )`
+
+- Search results are stored in the `FOnlineSessionSearch` 
+
+- Example:
+  ```cpp
+  TSharedRef<FOnlineSessionSearch> SessionSearchRef = MakeShared<FOnlineSessionSearch>();
+  MySessionInterface->FindSessions(0, SessionSearchRef);
+  // Store the ref as a pointer to access on success
+  SessionSearchPtr = SessionSearchRef;
+  ```
+
+### `FOnlineSessionSearch`
+
+- Search results stored in `TArray<FOnlineSessionSearchResult> FOnlineSessionSearch::SearchResults`
+
+## [`IOnlineSession::JoinSession()`](https://docs.unrealengine.com/5.1/en-US/API/Plugins/OnlineSubsystem/Interfaces/IOnlineSession/JoinSession/1/)
+
+- Must join the session via the session interface BEFORE performing Travel()
+
+- Then Travel in the `FOnJoinSessionComplete` delegate call
+
+- Example:
+```cpp
+  MySessionInterface->JoinSession(0, SESSION_NAME, SessionSearch->SearchResults[searchResultIndex]);
+```
+
+### [`FOnJoinSessionComplete`](https://docs.unrealengine.com/5.1/en-US/API/Plugins/OnlineSubsystem/Interfaces/FOnJoinSessionComplete/) delegate
+
+- Pass the ConnectInfo from  `GetResolvedConnectString` to PlayerTravel()
+
+Example:
+  ```cpp
+  void UPuzzlePlatformsGameInstance::OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result)
+  {
+    if (Result != EOnJoinSessionCompleteResult::Success) {
+      UE_LOG(LogTemp, Error, TEXT("Could not join session. Result=%u"), Result);
+      return;
+    }
+
+    FString ConnectInfo;
+    if (MySessionInterface->GetResolvedConnectString(SessionName, ConnectInfo)) {
+      
+      APlayerController* PlayerController = GetFirstLocalPlayerController();
+      if (!ensure(PlayerController != nullptr)) return;
+
+      UE_LOG(LogTemp, Warning, TEXT("Joining Session %s with connectin info %s"), *SessionName.ToString(), *ConnectInfo);
+
+      PlayerController->ClientTravel(ConnectInfo, ETravelType::TRAVEL_Absolute);
+    }
+  }
+  ```
+
+#### [`IOnlineSession:::GetResolvedConnectString()`](https://docs.unrealengine.com/5.1/en-US/API/Plugins/OnlineSubsystem/Interfaces/IOnlineSession/GetResolvedConnectString/1/)
+
+- `bool GetResolvedConnectString(FName SessionName, FString & ConnectInfo, FName PortType)`
+
+  - `SessionName` the name of the session to resolve
+  - `ConnectInfo` the string containing the platform specific connection information
+  - `PortType`  type of port to append to result (Game, Beacon, etc)
 
 ## Updating Sessions
 
@@ -695,3 +800,5 @@ For platforms that support it, call `IOnlinSession::StartMatchmaking()`, and the
 - `IOnlineSession::SendSessionInviteToFriend()` and `IOnlineSession::SendSessionInviteToFriends()` to invite a friend.
 
   - `OnSessionInviteAccepted` - delegate
+
+## AGameSession
