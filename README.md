@@ -3,8 +3,7 @@
 Welcome to my live notes taken for learning Unreal Engine.
 
 # Todo:
-- Source Control with Unreal and Large Binaries
-- Lookup Rotator vs Rotation
+- Source Control with Large Binaries
 
 ## [Design Tips](./design-tips.md)
 

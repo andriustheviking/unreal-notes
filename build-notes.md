@@ -2,6 +2,10 @@
 
 ---
 
+# Packaging
+
+In UE, open **Platforms** dropdown menu, select target platform, then "Package Product". A dialogue will ask for destination directory.
+
 # Visual Studio
 
 ## NuGet
