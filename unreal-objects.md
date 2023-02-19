@@ -284,6 +284,19 @@ DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_FiveParams( FComponentHitSignature, UP
 
 ## Precompiler Macros
 
+### USTRUCT()
+
+To make a struct compatible with UE use macros:
+
+```cpp
+USTRUCT()
+struct FServerListData 
+{
+  GENERATED_USTRUCT_BODY()
+  ...
+};
+```
+
 ### UCLASS()
 
 - Needed for the C++ class to be recognized by the Unreal Engine editor.
