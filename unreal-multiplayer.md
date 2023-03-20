@@ -90,6 +90,8 @@ Client Launch Example:
 
 - `-game` Launch the game using uncooked content.
 
+- `-nosteam` replaces steam subsystem with NULL
+
 - Example:
   - Launch in windowed mode add `-ResX=1280 -ResY=720 -WINDOWED` to the cli
 
@@ -474,13 +476,15 @@ There are three ways in which a non-seamless travel must occur:
 
 ### Seamless Transition Map
 
-- Seamless Travel has a Transition Map configured in `UGameMapsSettings::TransitionMap` 
+- Seamless Travel has a **Transition Map** configured in `UGameMapsSettings::TransitionMap` 
 
 - Empty by default
 
 - Transition maps are required due to a Map always needing to be instanced, and Large maps can overload the memory.
 
 - To enable, set `AGameMode::bUseSeamlessTravel = true`
+
+- Can set default transition map in Project Settings
 
 ### Seamless Actor Persistence
 
@@ -696,6 +700,19 @@ A session is the instance of the game runnign on a server with a given set of pr
   SessionSettings.bShouldAdvertise = true;
 ```
 
+### `Set / Get`
+
+- Use to pass data via SessionSettings search results
+
+- `SessionSettings.Set(FName Key, const ValueType& Value, EOnlineDataAdvertisementType::Type)`
+  - Sets a key value pair combination that defines a session setting.
+  - `EOnlineDataAdvertisementType::Type`
+    - `DontAdvertise`
+    - `ViaPingOnly`
+    - `ViaOnlineService`
+    - `ViaOnlineServiceAndPing` - works over steam service and LAN
+
+
 ## `IOnlineSession::CreateSession`
 
 - Cannot create multiple sessions with the same
@@ -728,9 +745,31 @@ A session is the instance of the game runnign on a server with a given set of pr
   SessionSearchPtr = SessionSearchRef;
   ```
 
+- `void UPuzzlePlatformsGameInstance::OnFindSessionComplete(bool bSuccess)]` 
+  - Delegate called when search completes.
+  - Results stored in `OnlineSessionSearch` 
+
 ### `FOnlineSessionSearch`
 
 - Search results stored in `TArray<FOnlineSessionSearchResult> FOnlineSessionSearch::SearchResults`
+
+- [`FOnlineSessionSearchResult`](https://docs.unrealengine.com/5.1/en-US/API/Plugins/OnlineSubsystem/FOnlineSessionSearchResult/)
+
+- Search result object also contains [`FOnlineSession`](https://docs.unrealengine.com/5.1/en-US/API/Plugins/OnlineSubsystem/FOnlineSession/)
+
+- Example:
+```cpp
+    FOnlineSessionSearchResult Result = SessionSearch->SearchResults[i];
+
+    FString ServerName = Result.GetSessionIdStr();
+    FString HostUserName = Result.Session.OwningUserName;
+    uint16 TotalPlayers = Result.Session.SessionSettings.NumPublicConnections;
+    uint16 CurrentPlayers = ServerInfo.TotalPlayers - Result.Session.NumOpenPublicConnections;
+```
+
+### `FOnlineSession`
+
+- `NumOpenPublicConnections` number of open slots. (Note, NULL subsystem doesn't update this number properly)
 
 ## [`IOnlineSession::JoinSession()`](https://docs.unrealengine.com/5.1/en-US/API/Plugins/OnlineSubsystem/Interfaces/IOnlineSession/JoinSession/1/)
 

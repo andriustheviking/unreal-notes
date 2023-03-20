@@ -18,13 +18,19 @@
 
 # Widgets
 
-- **Tip:** `RemoveFromParent` on `self` from the Widget's Event Graph will remove the widget instance from the scene entirely.
-
 - Widget Editer has two parts:
   
   - **Designer** - visual canvas to design widget
   
   - **Event Graph** - Blueprint event graph
+
+## Adding a Widget
+
+- Widgets must be added to Viewport at runtime. 
+
+- First `CreateWidget` from the desired Widget clas (either in C++ or Blueprint). Then call `AddToViewport` to add the widget to the view screen. 
+
+- **Tip:** `RemoveFromParent` on `self` from the Widget's Event Graph will remove the widget instance from the scene entirely.
 
 ## UWidget vs UUserWidget
 

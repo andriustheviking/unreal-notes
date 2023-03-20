@@ -71,8 +71,9 @@ To create a new Unreal C++ object that can be accessed in the editor, highlight 
 
 - `FName`
   - 8 bytes / character
+  - **case-insensitive** and immutable
   - Recommended for sending over network.
-  - `Name_None` is FName null equivalent
+  - `NAME_None` is FName null equivalent
   - Need to call `.ToString()` to get FString pointer.
   - Dereference FString to get FName
 
@@ -293,7 +294,7 @@ USTRUCT()
 struct FServerListData 
 {
   GENERATED_USTRUCT_BODY()
-  ...
+  // ...
 };
 ```
 
