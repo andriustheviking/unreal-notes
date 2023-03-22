@@ -968,11 +968,11 @@ Functions using `BlueprintNativeEvent` can be implemented in C++ by overriding a
 
 Use `FTimerManager` and `FTimerHandle` to setup timer event scheduling. The FTimer class contains references to world timer functions.
 
-### FTimerHandle
+### [FTimerHandle](https://docs.unrealengine.com/5.1/en-US/API/Runtime/Engine/Engine/FTimerHandle/)
 
 `#include "Engine/EngineTypes.h"`
 
-## TimerManager
+## [TimerManager](https://docs.unrealengine.com/5.1/en-US/API/Runtime/Engine/FTimerManager/)
 
 `#include "TimerManager.h"`
 
@@ -981,6 +981,11 @@ Use `FTimerManager` and `FTimerHandle` to setup timer event scheduling. The FTim
   - `SetTimer(...)` sets the timer
 
   - Can access via `AActor::GetWorldTimerManager` or `UWorld::GetTimerManager`
+
+  - Example: 
+    ```cpp
+    GetWorldTimerManager().SetTimer(StartTimerHandle, this, &APuzzlePlatformsLobbyGameMode::StartPuzzlePlatformGame, 5);
+    ```
 
 ### FTimerDelegate
 

@@ -16,6 +16,7 @@
 - [Travelling](#Travelling)
 - [IOnlineSubsystem](#IOnlineSubsystem)
 - [IOnlineSession](#IOnlineSession)
+- [Network Failure](#network-failures)
 
 ---
 
@@ -729,6 +730,11 @@ A session is the instance of the game runnign on a server with a given set of pr
   SessionInterface->CreateSession(0, TEXT("HostedPuzzleSession"), SessionSettings);
   ```
 
+## `IONlineSession::StartSession`
+
+- Marks the session as in-progress *(as opposed to being in lobby or in progress)*
+  - Valid for both Steam and NULL interfaces
+
 ## `IOnlineSession::FindSessions`
 
 - [Documentation](https://docs.unrealengine.com/4.26/en-US/API/Plugins/OnlineSubsystem/Interfaces/IOnlineSession/FindSessions/1/)
@@ -770,6 +776,8 @@ A session is the instance of the game runnign on a server with a given set of pr
 ### `FOnlineSession`
 
 - `NumOpenPublicConnections` number of open slots. (Note, NULL subsystem doesn't update this number properly)
+
+- Note: Use the session name enum to name the session: `NAME_GameSession`, or whichever is most appropriate.
 
 ## [`IOnlineSession::JoinSession()`](https://docs.unrealengine.com/5.1/en-US/API/Plugins/OnlineSubsystem/Interfaces/IOnlineSession/JoinSession/1/)
 
@@ -840,4 +848,20 @@ For platforms that support it, call `IOnlinSession::StartMatchmaking()`, and the
 
   - `OnSessionInviteAccepted` - delegate
 
-## AGameSession
+# Network Failures
+
+- NetworkFailures are handled by the Game Engine. Basically the session interface sets up the connections, but the engine handles the once set up.
+
+- Can register via the Global `UEngine * GEngine` object:
+
+- Example:
+```cpp
+// OnNetworkFailure Callback Signature
+void UPuzzlePlatformsGameInstance::HandleNetworkFailure(UWorld* World, UNetDriver* NetDriver, ENetworkFailure::Type FailureType, const FString& ErrorString);
+
+// Registering:
+if (GEngine != nullptr) // GEngine object can be null
+{
+  GEngine->OnNetworkFailure().AddUObject(this, &UPuzzlePlatformsGameInstance::HandleNetworkFailure);
+}
+```
