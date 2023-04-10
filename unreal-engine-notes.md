@@ -5,6 +5,7 @@
 - [Overview](#unreal-overview)
 - [AI](#ai)
 - [Animation](#animation)
+- [Input](#input)
 - [Light](#light)
   - [Sky Light](#sky-light)
   - [Ambient Light](#ambient-light)
@@ -39,6 +40,78 @@
 # Animation
 
 - See [Animation Notes](./unreal-animation.md)
+
+# Input
+
+## [Enhanced Input Actions](https://docs.unrealengine.com/5.1/en-US/enhanced-input-in-unreal-engine/)
+
+`#include "EnhancedInputComponent.h"`
+
+**NOTE:** Must include the `EnhancedInput` module in your build.cs file
+
+Enhanced Input Operates by creating input Action classes, as opposed to using strings to map inputThr
+
+### InputActions
+
+- Defines the Action type label *("Walk", "Run", "Heal", "Reload")*, and the Value type *(BOOL, Float, 2DVector, 3DVector)*
+
+- Maps Triggers and Modifiers to it
+
+- Input Actions are binded via registering Listener object: 
+
+Header:
+```cpp
+  UFUNCTION() //Not sure needs to be a UFUNCTION ?
+  void UpdateThrottle(const struct FInputActionValue& Value);
+
+  UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+  TObjectPtr<class UInputAction> ThrottleAction;
+```
+
+Implementation:
+```cpp
+void AGoKart::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+{
+  Super::SetupPlayerInputComponent(PlayerInputComponent);
+  if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
+  {
+    // You can bind to any of the trigger events here by changing the "ETriggerEvent" enum value
+    if (ThrottleAction)
+    {
+      EnhancedInputComponent->BindAction(ThrottleAction, ETriggerEvent::Ongoing, this, &AGoKart::UpdateThrottle);
+}}}
+```
+
+### InputMappingContext
+
+- Implements the actual KeyBindings to InputActions
+- `InputMappingContexts` can be created for different gameplay contexts (ie walking vs swimming)
+
+- Add the mapping context to the player's enhanced input subsystem:
+
+```cpp
+  UPROPERTY(EditDefaultsOnly, Category = "Components")
+  TObjectPtr<class UInputMappingContext> MappingContext;
+```
+```cpp
+  if (APlayerController* PC = Cast<APlayerController>(GetController()))
+  {
+    if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PC->GetLocalPlayer()))
+    {
+      Subsystem->ClearAllMappings();
+      Subsystem->AddMappingContext(Mapping, 0);
+    }
+  }
+```
+
+### InputModifiers
+
+- Input Modifiers are pre-processors that alter the raw input values that UE receives before sending them on to Input Triggers.
+- ie changing the order of axes, implementing "dead zones", and converting axial input to world space. 
+
+### Input Triggers
+
+- Set conditions to trigger inputs, like holding a certain number of times, or "chorded" input patterns
 
 # Light
 

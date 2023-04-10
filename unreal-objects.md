@@ -164,6 +164,14 @@ Struct for *statically allocated optionals*. Since it's static, not a pointer. *
 
 - Can assign TSharedPtr to TSharedRef if explicitly check ptr `.IsValid()`
 
+### [TFunction]
+
+- TFunction works like `std::function` in normal C++ therefore, “void” is the function’s return type and anything inside the ( ) is the parameters, which can be left empty.
+
+```cpp
+void MyFunction( TFunction<void(int32 Numparam)> MyFunctionToCall)
+```
+
 ### Garbage Collection
 
 - Unreal GC uses the [Unreal Reflection System](https://www.unrealengine.com/en-US/blog/unreal-property-system-reflection), which allows the unreal code to analyze itself.
@@ -171,7 +179,7 @@ Struct for *statically allocated optionals*. Since it's static, not a pointer. *
 
 - Unreal starts from the **root set**, objects which should be permanent. From there it traverses the **UPROPERTY** pointers of each object. So long as the parent UObject is referenced, UPROPERTY's will be guaranteed alive. Any objects not found during this process are free'd.
 
-- To dynamically add an object that's not referenced via `UPROPERTY()`, use `YourObjectInstance->AddToRoot();`. This would be used when dynamically adding Components to root in C++
+- **To dynamically add an object that's not referenced via `UPROPERTY()`, use `YourObjectInstance->AddToRoot();`.** This would be used when dynamically adding Components to root in C++
 
 - `SetOwner()`, `GetOwner()`  sets/references the object owner in the tree
 
@@ -319,7 +327,7 @@ struct FServerListData
 
 Always include for object properties on Unreal classes. Super important for correct object lifecycle in game engine. 
 
-#### Parameters
+#### [Specifiers](https://docs.unrealengine.com/5.1/en-US/unreal-engine-uproperty-specifiers/)
 - `Category="foobar"` - puts the variable in a category name 
 - `VisibleAnywhere` - Shows variable value in unreal editor (not editable)
 - `VisibleInstanceOnly` - Visible only when instanced (in viewer Details window)
@@ -518,6 +526,7 @@ Two primary event types:
   ```
   - `BindAxis()`
     - Example: `PlayerInputComponent->BindAxis(TEXT("MoveForward"), this, &ATank::Move);`
+    - Where `ATank::Move(float)`
     - NOTE: Joystick axis input will be frame-rate independent. Need to Account for variable framerate
 
   - `BindAction`
